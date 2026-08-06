@@ -1,3 +1,11 @@
+# Stage 1: Vendor JS dependencies via npm
+FROM node:20-slim AS vendor
+WORKDIR /build
+COPY package.json ./
+COPY scripts/ scripts/
+RUN npm install --omit=dev && npm run vendor
+
+# Stage 2: Final image
 FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -13,6 +21,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY src/ /build/src/
 COPY VERSION /build/VERSION
+COPY --from=vendor /build/src/usr/share/rpimonitor/web/js/ /build/src/usr/share/rpimonitor/web/js/
+COPY --from=vendor /build/src/usr/share/rpimonitor/web/css/bootstrap-icons.min.css /build/src/usr/share/rpimonitor/web/css/
+COPY --from=vendor /build/src/usr/share/rpimonitor/web/fonts/ /build/src/usr/share/rpimonitor/web/fonts/
+
+WORKDIR /build
 
 RUN mkdir -p /usr/share/rpimonitor \
     /etc/rpimonitor \
@@ -37,4 +50,4 @@ VOLUME /var/lib/rpimonitor
 
 EXPOSE 8888
 
-CMD ["perl", "/usr/bin/rpimonitord", "-b", "0.0.0.0"]
+CMD ["perl", "/usr/bin/rpimonitord"]

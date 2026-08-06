@@ -12,7 +12,7 @@ services:
       # Create ./config/ and copy from src/etc/rpimonitor/ before enabling:
       # - ./config:/etc/rpimonitor
     healthcheck:
-      test: ["CMD", "perl", "-e", "use IO::Socket::INET; my $s = IO::Socket::INET->new(PeerAddr=>'127.0.0.1',PeerPort=>8888,Timeout=>2) or die; close $s;"]
+      test: ["CMD", "perl", "-e", "use IO::Socket::INET; my $$s = IO::Socket::INET->new(PeerAddr=>'127.0.0.1',PeerPort=>8888,Timeout=>2) or die; close $$s;"]
       interval: 30s
       timeout: 5s
       retries: 3
