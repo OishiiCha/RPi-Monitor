@@ -111,9 +111,11 @@ sub Load
   $this->{'snmpagent'}->{'lastupdate'}     ||= "201802030000Z";
   $this->{'snmpagent'}->{'moduleidentity'} ||= "rpi-experiences";
   $this->{'snmpagent'}->{'organisation'}   ||= "RPi-Monitor";
-  $this->{'snmpagent'}->{'contactionfo'}   ||= "http://rpi-experiences.blogspot.fr/";
+  $this->{'snmpagent'}->{'contactionfo'}   ||= "https://rpi-experiences.blogspot.com/";
   $this->{'snmpagent'}->{'description'}    ||= "description";
   $this->{'snmpagent'}->{'revision'}       ||= "201802030000Z";
+
+  $this->Validate();
 
   if ( ! $this->{'daemon'}->{'readonly'} ){
     # manage rrds
@@ -168,6 +170,67 @@ sub Load
         -create  => 'yes',
         -destroy => 'no'
     ) or die $!;
+}
+
+sub Validate
+{
+  my $this = shift;
+  $this->Debug(2,"");
+
+  my @errors;
+  my @warnings;
+
+  my $d = $this->{'daemon'};
+
+  if ( defined $d->{'port'} && $d->{'port'} !~ /^\d+$/ ) {
+    push @errors, "daemon.port must be a number (got: $d->{'port'})";
+  }
+  if ( defined $d->{'port'} && ( $d->{'port'} < 1 || $d->{'port'} > 65535 ) ) {
+    push @errors, "daemon.port must be between 1 and 65535 (got: $d->{'port'})";
+  }
+  if ( defined $d->{'delay'} && $d->{'delay'} !~ /^\d+$/ ) {
+    push @errors, "daemon.delay must be a positive number (got: $d->{'delay'})";
+  }
+  if ( defined $d->{'delay'} && $d->{'delay'} < 1 ) {
+    push @warnings, "daemon.delay is very low ($d->{'delay'}s) - may cause high CPU load";
+  }
+  if ( defined $d->{'timeout'} && $d->{'timeout'} !~ /^\d+$/ ) {
+    push @errors, "daemon.timeout must be a positive number (got: $d->{'timeout'})";
+  }
+  if ( defined $d->{'addr'} && $d->{'addr'} !~ /^\d+\.\d+\.\d+\.\d+$/ ) {
+    push @warnings, "daemon.addr does not look like a valid IP address (got: $d->{'addr'})";
+  }
+  if ( defined $d->{'ssl'} && $d->{'ssl'} && ! -f $d->{'sslcert'} ) {
+    push @warnings, "daemon.sslcert file not found: $d->{'sslcert'}";
+  }
+  if ( defined $d->{'ssl'} && $d->{'ssl'} && ! -f $d->{'sslkey'} ) {
+    push @warnings, "daemon.sslkey file not found: $d->{'sslkey'}";
+  }
+  if ( defined $d->{'auth'} && $d->{'auth'} && ( !defined $d->{'authpass'} || $d->{'authpass'} eq '' ) ) {
+    push @warnings, "daemon.auth is enabled but daemon.authpass is not set";
+  }
+  if ( defined $d->{'webroot'} && ! -d $d->{'webroot'} ) {
+    push @errors, "daemon.webroot directory not found: $d->{'webroot'}";
+  }
+
+  foreach my $rrd ( @{$this->{'rrd'}} ) {
+    if ( !defined $rrd->{'name'} || $rrd->{'name'} eq '' ) {
+      push @errors, "RRD entry missing 'name' field";
+    }
+  }
+
+  foreach my $w ( @warnings ) {
+    print STDERR "[WARNING] Configuration: $w\n";
+  }
+
+  if ( @errors ) {
+    foreach my $e ( @errors ) {
+      print STDERR "[ERROR] Configuration: $e\n";
+    }
+    die "Configuration validation failed with " . scalar(@errors) . " error(s). See above.\n";
+  }
+
+  $this->Debug(1, "Configuration validated: " . scalar(@warnings) . " warning(s), 0 error(s)");
 }
 
 sub LoadFile
@@ -292,3 +355,54 @@ sub CreateRRD
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+RPi::Monitor::Configuration - Configuration loading and management for RPi-Monitor
+
+=head1 SYNOPSIS
+
+  use RPi::Monitor::Configuration;
+  my $config = RPi::Monitor::Configuration->new();
+  $config->Load();
+
+=head1 DESCRIPTION
+
+This module handles loading and parsing of RPi-Monitor configuration files
+(F<daemon.conf>, F<data.conf>, template files). It manages default values,
+command-line overrides, RRD file definitions, and shared memory state.
+
+=head1 METHODS
+
+=head2 new()
+
+Creates a new Configuration object with default values.
+
+=head2 Load()
+
+Loads all configuration files specified in C<confFiles>, merges defaults,
+and populates the configuration hash.
+
+=head2 Debug($level, @msg)
+
+Outputs debug messages to STDERR when C<$level> is at or below the
+global C<$main::loglevel>.
+
+=head2 GreatestCommonDivisor($a, $b)
+
+Returns the greatest common divisor of two numbers.
+
+=head2 Validate()
+
+Validates loaded configuration for common errors. Checks port range,
+delay/timeout values, IP address format, SSL cert/key file existence,
+auth password, webroot directory, and RRD name fields. Prints warnings
+to STDERR and dies on errors.
+
+=head1 AUTHOR
+
+Xavier Berger - L<https://rpi-experiences.blogspot.com/>
+
+=cut

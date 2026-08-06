@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-# Copyright 2013-2014 - Xavier Berger - http://rpi-experiences.blogspot.fr/
+# Copyright 2013-2026 - Xavier Berger - http://rpi-experiences.blogspot.fr/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="RPi-Monitor">
     <meta name="author" content="RPi-Experiences">
+    <meta name="theme-color" content="#0d6efd">
+    <link rel="manifest" href="./manifest.json">
     <meta http-equiv="Cache-control" content="public" />
 
     <!-- CSS -->
@@ -38,23 +40,23 @@
   <body>
 
     <!-- Fixed navbar -->
-    <div id='topmenu'></div>
+    <div id='topmenu' role="navigation" aria-label="Main navigation"></div>
 
     <!-- Begin page content -->
     &nbsp;<br>
-    <div class="container-fluid">
+    <div class="container-fluid" role="main">
       <div class="card card-body bg-body-tertiary text-center p-5 mb-4">
         <h1><b>RPi</b>-<b>Monitor</b></h1>
         <p>Welcome to <b>RPi-Monitor</b> web interface.</p>
-        <p><a href="status.html" class="btn btn-lg btn-success">Start</a></p>
+        <p><a href="status.html" class="btn btn-lg btn-success" role="button">Start</a></p>
       </div>
     </div>
 
     <!-- Fixed footer -->
-    <div id="footer"></div>
+    <div id="footer" role="contentinfo"></div>
  
     <!-- Dialog place holder -->
-    <div id="dialogs"></div>
+    <div id="dialogs" role="region" aria-label="Dialogs"></div>
 
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="./js/jquery.min.js"></script>

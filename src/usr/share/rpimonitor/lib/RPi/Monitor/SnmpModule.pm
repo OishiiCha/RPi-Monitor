@@ -124,3 +124,43 @@ sub Run
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+RPi::Monitor::SnmpModule - SNMP agent extension for RPi-Monitor
+
+=head1 SYNOPSIS
+
+  use RPi::Monitor::SnmpModule;
+  my $snmp = RPi::Monitor::SnmpModule->new();
+  $snmp->Run($configuration, $static);
+
+=head1 DESCRIPTION
+
+This module implements an SNMP agent extension using
+L<SNMP::Extension::PassPersist>. It exposes RPi-Monitor's collected
+data as SNMP OIDs, allowing integration with network monitoring
+systems like Nagios, Zabbix, or PRTG.
+
+=head1 METHODS
+
+=head2 new()
+
+Creates a new SnmpModule object.
+
+=head2 Run($configuration, $static)
+
+Starts the SNMP pass-persist agent. Refreshes OID tree every
+10 seconds from shared memory data.
+
+=head2 GetMib($configuration)
+
+Prints the MIB tree to stdout and exits. Used for discovery.
+
+=head1 AUTHOR
+
+Xavier Berger - L<https://rpi-experiences.blogspot.com/>
+
+=cut

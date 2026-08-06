@@ -1,5 +1,5 @@
 <!--
-# Copyright 2013-2014 - Xavier Berger - http://rpi-experiences.blogspot.fr/
+# Copyright 2013-2026 - Xavier Berger - http://rpi-experiences.blogspot.fr/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="RPi-Monitor">
     <meta name="author" content="RPi-Experiences">
+    <meta name="theme-color" content="#0d6efd">
+    <link rel="manifest" href="./manifest.json">
     <meta http-equiv="Cache-control" content="public" />
 
     <!-- CSS -->
@@ -37,22 +39,22 @@
   <body>
 
     <!-- Fixed navbar -->
-    <div id='topmenu'></div>
+    <div id='topmenu' role="navigation" aria-label="Main navigation"></div>
 
     <!-- Begin page content -->
-    <div class="list-group-item list-group-item-danger hide" id="message" ></div>
-    <div class="text-info page-title hide" id="pageTitle"></div>
-    <div class="container-fluid column-fluid">    
-         <div id="sortableListGroup" class="list-group">
+    <div class="list-group-item list-group-item-danger hide" id="message" role="alert" aria-live="assertive"></div>
+    <div class="text-info page-title hide" id="pageTitle" role="heading" aria-level="1"></div>
+    <div class="container-fluid column-fluid" role="main">
+         <div id="sortableListGroup" class="list-group" role="list">
            <i id="insertionPoint"></i>
          </div>
     </div>
 
     <!-- Fixed footer -->
-    <div id="footer"></div>
+    <div id="footer" role="contentinfo"></div>
  
     <!-- Dialog place holder -->
-    <div id="dialogs"></div>
+    <div id="dialogs" role="region" aria-label="Dialogs"></div>
 
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="./js/jquery.min.js"></script>

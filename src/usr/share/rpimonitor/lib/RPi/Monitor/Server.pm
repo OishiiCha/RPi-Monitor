@@ -293,7 +293,9 @@ sub Run
       "/js/javascriptrrd/rrdMultiFile.js",
       "/js/javascriptrrd/rrdFile.js",
       "/js/javascriptrrd/rrdFlotSupport.js",
-      "/js/Sortable.1.15.2.min.js"
+      "/js/Sortable.1.15.2.min.js",
+      "/manifest.json",
+      "/sw.js"
     ));
   }
   $this->{'paths'} = \@paths;
@@ -383,3 +385,47 @@ sub Run
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+RPi::Monitor::Server - HTTP web server for RPi-Monitor
+
+=head1 SYNOPSIS
+
+  use RPi::Monitor::Server;
+  my $server = RPi::Monitor::Server->new();
+  $server->Run($configuration, $monitor);
+
+=head1 DESCRIPTION
+
+This module implements the HTTP::Daemon-based web server that serves
+the RPi-Monitor web interface. It handles static file serving, JSON
+API endpoints (C<static.json>, C<dynamic.json>, C<version.json>, etc.),
+authentication, rate limiting, and security headers.
+
+=head1 METHODS
+
+=head2 new()
+
+Creates a new Server object.
+
+=head2 Run($configuration, $monitor)
+
+Starts the HTTP server. Accepts connections, processes requests,
+serves static files and JSON endpoints. Blocks indefinitely.
+
+=head2 Authenticate($request)
+
+Handles HTTP Basic Authentication if enabled in configuration.
+
+=head2 Debug($level, @msg)
+
+Outputs debug messages to STDERR.
+
+=head1 AUTHOR
+
+Xavier Berger - L<https://rpi-experiences.blogspot.com/>
+
+=cut

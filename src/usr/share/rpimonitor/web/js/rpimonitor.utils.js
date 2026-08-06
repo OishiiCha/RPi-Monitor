@@ -1,6 +1,6 @@
 // This file is part of RPi-Monitor project
 //
-// Copyright 2013 - Xavier Berger - http://rpi-experiences.blogspot.fr/
+// Copyright 2013-2026 - Xavier Berger - http://rpi-experiences.blogspot.fr/
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,6 +27,12 @@ var safeEvalContext = {
   Function: undefined
 };
 
+/**
+ * Safely evaluate an expression with a restricted context.
+ * @param {string} expr - The expression to evaluate.
+ * @param {Object} [context] - Additional context variables.
+ * @returns {*} The result, or the original expr on error.
+ */
 function safeEval(expr, context) {
   var ctx = {};
   for (var k in safeEvalContext) { ctx[k] = safeEvalContext[k]; }
@@ -41,6 +47,12 @@ function safeEval(expr, context) {
   }
 }
 
+/**
+ * Safely evaluate a statement with a restricted context.
+ * @param {string} stmt - The statement to evaluate.
+ * @param {Object} [context] - Additional context variables.
+ * @returns {*} The result, or the original stmt on error.
+ */
 function safeEvalStmt(stmt, context) {
   var ctx = {};
   for (var k in safeEvalContext) { ctx[k] = safeEvalContext[k]; }
@@ -55,6 +67,13 @@ function safeEvalStmt(stmt, context) {
   }
 }
 
+/**
+ * Create an info icon with popover data.
+ * @param {string} id - DOM element ID for the popover trigger.
+ * @param {string} title - Popover title.
+ * @param {string} text - Popover content.
+ * @returns {string} HTML string with info icon, or empty string.
+ */
 function ShowInfo(id,title,text){
   if ( text ) {
     postProcessInfo.push(["#"+id, title, text]);
@@ -65,14 +84,29 @@ function ShowInfo(id,title,text){
   }
 }
 
+/**
+ * Pad a number with leading zero if < 10.
+ * @param {number} n - The number to pad.
+ * @returns {string} Zero-padded string.
+ */
 function Pad(n){
   return n<10 ? '0'+n : n
 }
 
+/**
+ * Return plural 's ' or singular ' ' based on count.
+ * @param {number} n - The count to check.
+ * @returns {string} 's ' if n > 1, else ' '.
+ */
 function Plural(n){
   return n>1 ? 's ' : ' '
 }
 
+/**
+ * Format uptime seconds into a human-readable string.
+ * @param {number} value - Uptime in seconds.
+ * @returns {string} HTML-formatted uptime string.
+ */
 function Uptime(value){
   var uptimetext='';
   var years = Math.floor(value / 31556926);
@@ -91,6 +125,12 @@ function Uptime(value){
   return uptimetext;
 }
 
+/**
+ * Format a byte value with SI prefixes (k, M, G, T, P, E).
+ * @param {number} value - The value in bytes.
+ * @param {string} [initPre] - Initial prefix to convert from.
+ * @returns {string} Formatted string like "1.50MB".
+ */
 function KMG(value, initPre){
   var unit = 1024;
   var prefix = "kMGTPE";
@@ -108,10 +148,24 @@ function KMG(value, initPre){
   }
 }
 
+/**
+ * Calculate percentage string.
+ * @param {number} value - The part value.
+ * @param {number} total - The total value.
+ * @returns {string} Percentage string like "33.33%".
+ */
 function Percent(value,total){
   return (100*value/total).toFixed(2)+"%";
 }
 
+/**
+ * Create a Bootstrap progress bar HTML.
+ * @param {number} value - Current value.
+ * @param {number} max - Maximum value.
+ * @param {number} [warning] - Warning threshold percentage.
+ * @param {number} [danger] - Danger threshold percentage.
+ * @returns {string} HTML string for a Bootstrap progress bar.
+ */
 function ProgressBar(value, max, warning, danger){
   var percent = ((100 * value ) / max).toFixed(2)
   var warning = warning || 0
@@ -136,6 +190,20 @@ function ProgressBar(value, max, warning, danger){
   return "<div class='progress'><div class='progress-bar "+color+"' role='progressbar' aria-valuemin='0' aria-valuemax='100' aria-valuenow='"+percent+"' style='width: "+percent+"%;'>"+percent+"%</div></div>"
 }
 
+/**
+ * Create a JustGage gauge HTML element.
+ * @param {string} title - Gauge title.
+ * @param {string} label - Gauge label.
+ * @param {number} min - Minimum value.
+ * @param {number} value - Current value.
+ * @param {number} max - Maximum value.
+ * @param {number} [width=100] - Gauge width in pixels.
+ * @param {number} [height=80] - Gauge height in pixels.
+ * @param {Array} [levelColors] - Array of 3 color strings.
+ * @param {number} [warning] - Warning threshold.
+ * @param {number} [critical] - Critical threshold.
+ * @returns {string} HTML div string for the gauge.
+ */
 function JustGageBar(title, label, min, value, max, width, height, levelColors, warning, critical){
   width  = width  || 100
   height = height || 80

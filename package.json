@@ -1,0 +1,22 @@
+{
+  "name": "rpi-monitor",
+  "version": "2.13.0",
+  "description": "Real-time monitoring for embedded devices, originally built for Raspberry Pi",
+  "license": "GPL-3.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint src/usr/share/rpimonitor/web/js/rpimonitor*.js",
+    "test": "echo 'No JS tests yet'"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  },
+  "dependencies": {
+    "jquery": "3.7.1",
+    "bootstrap": "5.3.3",
+    "bootstrap-icons": "1.11.3",
+    "raphael": "2.3.0",
+    "justgage": "1.6.1",
+    "sortablejs": "1.15.2"
+  }
+}

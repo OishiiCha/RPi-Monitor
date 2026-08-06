@@ -1,0 +1,157 @@
+openapi: 3.0.3
+info:
+  title: RPi-Monitor API
+  description: >
+    Real-time monitoring API for embedded devices.
+    Provides system metrics, statistics, and configuration data.
+  version: 1.0.0
+  license:
+    name: GPL-3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.html
+
+servers:
+  - url: http://localhost:8888
+    description: Local RPi-Monitor instance
+
+paths:
+  /static.json:
+    get:
+      summary: Get static system information
+      description: Returns static system data collected once at startup (model, CPU info, memory, etc.)
+      responses:
+        '200':
+          description: Static system data
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Key-value pairs of static system metrics
+
+  /dynamic.json:
+    get:
+      summary: Get dynamic system information
+      description: Returns current dynamic data (CPU load, temperature, memory usage, etc.)
+      responses:
+        '200':
+          description: Dynamic system data
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Key-value pairs of dynamic system metrics
+
+  /all.json:
+    get:
+      summary: Get all system information
+      description: Returns combined static and dynamic data
+      responses:
+        '200':
+          description: Combined system data
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /version.json:
+    get:
+      summary: Get version information
+      responses:
+        '200':
+          description: Version data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+                    example: "2.13.0"
+
+  /status.json:
+    get:
+      summary: Get status page configuration
+      responses:
+        '200':
+          description: Status page layout configuration
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /statistics.json:
+    get:
+      summary: Get statistics page configuration
+      responses:
+        '200':
+          description: Statistics page layout configuration
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /addons.json:
+    get:
+      summary: Get addons list
+      responses:
+        '200':
+          description: List of available addons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /friends.json:
+    get:
+      summary: Get friends list
+      description: Returns list of linked RPi-Monitor instances
+      responses:
+        '200':
+          description: Friends list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    link:
+                      type: string
+                      format: uri
+
+  /menu.json:
+    get:
+      summary: Get menu configuration
+      responses:
+        '200':
+          description: Menu configuration
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /page.json:
+    get:
+      summary: Get page metadata
+      responses:
+        '200':
+          description: Page metadata including title
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagetitle:
+                    type: string
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+security:
+  - BasicAuth: []

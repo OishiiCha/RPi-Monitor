@@ -1,0 +1,31 @@
+site_name: RPi-Monitor Documentation
+site_description: Real-time monitoring for embedded devices
+site_url: https://xavierberger.github.io/RPi-Monitor-docs/
+repo_url: https://github.com/XavierBerger/RPi-Monitor
+repo_name: GitHub
+
+theme:
+  name: readthedocs
+  highlightjs: true
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Configuration:
+      - Daemon: daemon.md
+      - Data: data.md
+      - Templates: templates.md
+  - Web Interface:
+      - Status: status.md
+      - Statistics: statistics.md
+      - Addons: addons.md
+  - SNMP: snmp.md
+  - Docker: docker.md
+  - API: api.md
+  - Contributing: contributing.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true

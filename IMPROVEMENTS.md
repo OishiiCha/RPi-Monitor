@@ -16,9 +16,7 @@
 
 ## Code Quality & Modernization
 
-- [ ] **[P2] Add Perldoc documentation** - No inline POD in any Perl package. Add POD for all public methods.
-- [ ] **[P2] Add JSDoc documentation** - No JSDoc in any JavaScript files. Document all functions.
-- [ ] **[P3] Update copyright dates** - Most files say "Copyright 2013-2018" or "Copyright 2013-2014".
+*(No items remaining.)*
 
 ## Frontend Modernization
 
@@ -27,10 +25,6 @@
 - [ ] **[P2] Add package.json and build tooling** - Add modern build pipeline (Vite, webpack, or esbuild).
 - [ ] **[P2] Eliminate global JS variables** - Wrap in modules (ESM or IIFE).
 - [ ] **[P2] Replace inline HTML string construction** - Use template literals or templating engine.
-- [ ] **[P2] Add responsive design improvements** - Fixed widths in CSS. Make responsive with flexbox/grid.
-- [ ] **[P2] Add dark mode support** - Add CSS custom properties and `prefers-color-scheme` media query.
-- [ ] **[P2] Add accessibility (a11y) improvements** - Add ARIA roles and labels.
-- [ ] **[P3] Add PWA support** - Add manifest.json and service worker.
 - [ ] **[P3] Replace QR code library** - jsqrencode is from Google Code (dead). Replace with modern library.
 
 ## Architecture
@@ -39,35 +33,24 @@
 - [ ] **[P1] Add WebSocket support for real-time updates** - Replace 10s polling with WebSocket or SSE.
 - [ ] **[P2] Replace IPC::ShareLite with modern IPC** - Consider Redis, shared files, or Mojolicious IPC.
 - [ ] **[P2] Consider replacing RRD with modern time-series storage** - Consider InfluxDB, Prometheus, or SQLite.
-- [ ] **[P2] Design proper REST API** - Design RESTful API with versioning (`/api/v1/...`).
-- [ ] **[P2] Add API documentation** - Add OpenAPI/Swagger specification.
-- [ ] **[P3] Remove sysVinit support** - Consider deprecating sysVinit init script.
-- [ ] **[P3] Remove upstart support** - Upstart is obsolete.
 
 ## Testing & CI/CD
 
-- [ ] **[P2] Add test coverage reporting** - Add Devel::Cover for Perl, c8/istanbul for JS.
-- [ ] **[P2] Add automated release process** - Add GitHub Actions release workflow with semver.
-- [ ] **[P2] Add .deb package build automation** - Add `dpkg-deb` or `fpm` packaging.
+*(No items remaining.)*
 
 ## Documentation
 
-- [ ] **[P2] Fix dead links** - Blogspot and Google Code links may be dead. Update all URLs.
-- [ ] **[P3] Modernize docs build** - Consider migrating from Sphinx/RST to MkDocs or Docusaurus.
+*(No items remaining.)*
 
 ## Configuration
 
-- [ ] **[P2] Add config validation** - Add schema validation with meaningful error messages.
 - [ ] **[P2] Consider modern config format** - Consider YAML or TOML. Provide migration tool.
-- [ ] **[P3] Remove obsolete hardware templates** - raspbmc, xbian templates for discontinued distros.
 - [ ] **[P3] Add config migration tool** - Tool to migrate old config formats.
 
 ## Build & Deploy
 
-- [ ] **[P2] Pin dependency versions** - Add version constraints for JS libraries (cpanfile done for Perl).
 - [ ] **[P3] Replace git submodule with npm/cpan dependency** - Use package manager instead of submodule.
 
 ## Miscellaneous
 
-- [ ] **[P3] Add semantic versioning** - VERSION file contains `2.13`. Adopt semver.
-- [ ] **[P3] Remove `rpimonitord-snmp` symlink file** - Should be proper symlink, not text file.
+*(No items remaining.)*

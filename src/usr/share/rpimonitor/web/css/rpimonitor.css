@@ -1,7 +1,7 @@
 /* 
  * This file is part of RPi-Monitor project
  * 
- * Copyright 2013-2014 - Xavier Berger - http://rpi-experiences.blogspot.fr/
+ * Copyright 2013-2026 - Xavier Berger - http://rpi-experiences.blogspot.fr/
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -201,4 +201,94 @@ body {
 
 body.testmode-active {
   padding-top: 90px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+  .well {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+  }
+  .card {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+  }
+  .page-title,
+  .Title,
+  .Text {
+    color: #e0e0e0;
+  }
+  .popover {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #3a3a3a;
+  }
+  .popover-header {
+    background-color: #333;
+    color: #e0e0e0;
+    border-bottom-color: #444;
+  }
+  .popover-body {
+    color: #e0e0e0;
+  }
+  .table {
+    color: #e0e0e0;
+  }
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255,255,255,0.05);
+  }
+  .testmode-banner {
+    background: linear-gradient(90deg, #3a3a1a 0%, #4a4a2a 50%, #3a3a1a 100%);
+    color: #ffc107;
+    border-bottom-color: #8a6d3b;
+  }
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .Title {
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    float: none;
+  }
+  .Text {
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    float: none;
+    white-space: normal;
+    word-break: break-word;
+  }
+  .jumbotron h1 {
+    font-size: 42px;
+  }
+  .jumbotron .btn {
+    font-size: 18px;
+    padding: 10px 20px;
+  }
+  .popover {
+    max-width: 90vw;
+  }
+  #preloader {
+    width: 100px;
+    height: 100px;
+    margin: -50px 0 0 -50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .column-fluid {
+    column-count: 1 !important;
+    -webkit-column-count: 1 !important;
+    -moz-column-count: 1 !important;
+  }
+  .jumbotron h1 {
+    font-size: 32px;
+  }
 }

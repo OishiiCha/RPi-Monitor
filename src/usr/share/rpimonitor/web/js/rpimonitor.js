@@ -1,6 +1,6 @@
 // This file is part of RPi-Monitor project
 //
-// Copyright 2013 - Xavier Berger - http://rpi-experiences.blogspot.fr/
+// Copyright 2013-2026 - Xavier Berger - http://rpi-experiences.blogspot.fr/
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,6 +21,11 @@ var refreshTimerId;
 var clickId;
 var current_path = window.location.pathname.split('/').pop();
 
+/**
+ * Get a URL query parameter by name.
+ * @param {string} sParam - The parameter name to look up.
+ * @returns {string|undefined} The parameter value, or undefined if not found.
+ */
 function GetURLParameter(sParam)
 {
     var sPageURL = window.location.search.substring(1);
@@ -35,6 +40,11 @@ function GetURLParameter(sParam)
     }
 }
 
+/**
+ * Fetch JSON data from the server with localStorage caching.
+ * @param {string} name - The data source name (e.g. 'static', 'dynamic').
+ * @returns {Object|null} Parsed JSON data, or null on failure.
+ */
 function getData( name ){
   if ( localStorage.getItem(name+'Version') == localStorage.getItem('version') ) {
     return JSON.parse(localStorage.getItem(name));
@@ -59,6 +69,10 @@ function getData( name ){
   }
 }
 
+/**
+ * Render the friends list in the footer area.
+ * @returns {void}
+ */
 function ShowFriends(){
   var data = getData('friends')
   if ( data.length > 0 ) {
@@ -70,20 +84,28 @@ function ShowFriends(){
   }
 }
 
+/**
+ * Render the fixed bottom navbar footer.
+ * @returns {void}
+ */
 function AddFooter(){
 $('#footer').html(
   '<div class="navbar navbar-dark bg-dark fixed-bottom text-center">'+
     '<small class="text-secondary">'+
-      '<a href="http://rpi-experiences.blogspot.fr/">RPi-Experiences</a>'+
+      '<a href="https://rpi-experiences.blogspot.com/">RPi-Experiences</a>'+
       ' <span class="text-secondary">|</span> '+
       '<a href="https://github.com/XavierBerger/RPi-Monitor">GitHub</a>'+
       ' <span class="text-secondary">|</span> '+
-      '<a href="http://www.raspberrypi.org/">Raspberry Pi Foundation</a>'+
+      '<a href="https://www.raspberrypi.org/">Raspberry Pi Foundation</a>'+
     '</small>'+
   '</div>'
 );
 }
 
+/**
+ * Build and inject the About and Options modal dialogs.
+ * @returns {void}
+ */
 function AddDialogs(){
   var dialogs="";
 
@@ -154,13 +176,13 @@ function AddDialogs(){
       '<b>by</b> Xavier Berger</p>'+
       'With the contribution of users sharing ideas and competences on Github.'+
       '<br>'+
-      '<a href="http://rpi-experiences.blogspot.fr/">Blog</a>'+' - '+
+      '<a href="https://rpi-experiences.blogspot.com/">Blog</a>'+' - '+
       '<a href="https://github.com/XavierBerger/RPi-Monitor">GitHub</a>'+' - '+
       '<a href="https://xavierberger.github.io/RPi-Monitor-docs/index.html">Documentation</a>'+
       '<hr>'+
       '<p><b>RPi-Monitor</b> is free software developed on top of other open source '+
         'tools: <a href="https://getbootstrap.com/">bootstrap</a>, <a href="https://jquery.com/">jquery</a>, <a href="https://github.com/zpao/qrcode">jsqrencode</a>, <a href="https://github.com/manuelluis/javascriptrrd">javascriptrrd</a> and <a href="https://www.flotcharts.org/">Flot</a>.<br>'+
-      '<p><b>Raspberry Pi</b> and the Raspberry Pi logo are properties of <a href="http://www.raspberrypi.org/">Raspberry Pi Foundation</a>.</p>'+
+      '<p><b>Raspberry Pi</b> and the Raspberry Pi logo are properties of <a href="https://www.raspberrypi.org/">Raspberry Pi Foundation</a>.</p>'+
       '</div>'+
       '<div class="modal-footer">'+
       '<button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'+
@@ -172,6 +194,10 @@ function AddDialogs(){
   $('#dialogs').html(dialogs);
 }
 
+/**
+ * Build and inject the top navigation bar menu.
+ * @returns {void}
+ */
 function AddTopmenu(){
   page = getData('page')
   data = getData('static')
@@ -367,5 +393,10 @@ $(function () {
   AddDialogs();
   AddFooter();
   UpdateMenu();
+
+  // Register service worker for PWA support
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(function() {});
+  }
 
 });

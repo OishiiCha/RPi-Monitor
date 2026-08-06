@@ -1,0 +1,16 @@
+{
+  "name": "RPi-Monitor",
+  "short_name": "RPi-Monitor",
+  "description": "Real-time monitoring for embedded devices",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#0d6efd",
+  "icons": [
+    {
+      "src": "./img/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ]
+}

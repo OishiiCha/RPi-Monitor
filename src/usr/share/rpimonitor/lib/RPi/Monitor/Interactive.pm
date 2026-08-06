@@ -283,3 +283,38 @@ sub Run
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+RPi::Monitor::Interactive - Interactive configuration explorer for RPi-Monitor
+
+=head1 SYNOPSIS
+
+  use RPi::Monitor::Interactive;
+  my $interactive = RPi::Monitor::Interactive->new();
+  $interactive->Run();
+
+=head1 DESCRIPTION
+
+This module provides an interactive command-line interface for
+exploring RPi-Monitor configuration. Users can browse static and
+dynamic data sources, view formulas, and inspect extracted values.
+
+=head1 METHODS
+
+=head2 new()
+
+Creates a new Interactive object.
+
+=head2 Run()
+
+Starts the interactive exploration loop. Prompts the user for
+a data source name and displays configuration details.
+
+=head1 AUTHOR
+
+Xavier Berger - L<https://rpi-experiences.blogspot.com/>
+
+=cut

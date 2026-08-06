@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `use warnings` to all Perl packages
 - Removed deprecated `<font>` HTML tags from JavaScript
 - Split monolithic `rpimonitord` (1717 lines, 6 inline packages) into 5 modules under `lib/RPi/Monitor/`: `SafeEval.pm`, `Configuration.pm`, `Server.pm`, `Monitor.pm`, `Interactive.pm`, `SnmpModule.pm`
+- Updated all copyright headers to "Copyright 2013-2026" across Perl, JavaScript, CSS, and HTML files
+- Fixed dead/outdated links: blogspot.fr → blogspot.com (HTTPS), raspberrypi.org → HTTPS
+- Replaced `rpimonitord-snmp` text file with proper symlink in Makefile and Dockerfile
+- Added POD documentation to all 6 Perl modules (SafeEval, Configuration, Server, Monitor, Interactive, SnmpModule)
+- Added JSDoc comments to key functions in rpimonitor.js and rpimonitor.utils.js
 
 ### Frontend Modernization
 - Upgraded jQuery from 1.x to 3.7.1
@@ -33,6 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated all HTML pages with Bootstrap 5 markup and `bootstrap-icons.min.css` link
 - Updated `Server.pm` paths list for new library filenames
 - Removed deprecated `border=0` HTML attribute from statistics.html
+- Added dark mode support via `prefers-color-scheme` media query
+- Added responsive design breakpoints (768px, 480px) for mobile/tablet layouts
+- Added ARIA roles and labels to all HTML pages for accessibility
+- Added PWA support: `manifest.json`, service worker (`sw.js`), offline caching, theme-color meta
 
 ### Build & Deploy
 - Hardened systemd unit file with `NoNewPrivileges`, `ProtectSystem`, `ProtectHome`, `PrivateTmp`, `RestrictAddressFamilies`, etc.
@@ -42,6 +51,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed version string: reads from VERSION file at runtime instead of hardcoded `{DEVELOPMENT}`
 - Added `.gitignore` with Zone.Identifier exclusion
 - Added linter configuration: `.eslintrc.json` (JavaScript) and `.perltidyrc` (Perl)
+- Added `package.json` pinning JS dependency versions (jQuery, Bootstrap, Raphael, JustGage, Sortable.js, bootstrap-icons)
+- Added `make deb` target for building .deb packages with `dpkg-deb`
+### Configuration
+- Added config validation: `Validate()` method in `Configuration.pm` checks port, delay, timeout, SSL, auth, webroot, and RRD entries
+- Marked raspbmc and xbian templates as deprecated (discontinued distros)
+- Removed sysVinit and upstart support from Makefile (systemd is now default)
+- Added OpenAPI 3.0 specification (`openapi.yaml`) documenting all REST API endpoints
+- Added GitHub Actions release workflow (`.github/workflows/release.yml`) with tag-triggered releases
+- Added test coverage job to CI using Devel::Cover
 - Modernized README with Docker quick start, configuration reference, and project structure
 
 ### Documentation

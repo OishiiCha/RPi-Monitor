@@ -368,3 +368,50 @@ sub Alert
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+RPi::Monitor::Monitor - Data collection and RRD management for RPi-Monitor
+
+=head1 SYNOPSIS
+
+  use RPi::Monitor::Monitor;
+  my $monitor = RPi::Monitor::Monitor->new();
+  $monitor->Process($configuration, 'static');
+  $monitor->Run($configuration, $serverpid);
+
+=head1 DESCRIPTION
+
+This module handles data collection from the system (CPU temperature,
+memory, disk usage, network, etc.), stores values in RRD files, and
+exposes static and dynamic data as JSON. It also manages alert
+evaluation and notification.
+
+=head1 METHODS
+
+=head2 new()
+
+Creates a new Monitor object.
+
+=head2 Process($configuration, $type)
+
+Collects data of the specified type (C<'static'> or C<'dynamic'>)
+and stores results in the object's C<static> or C<dynamic> hash.
+
+=head2 Run($configuration, $serverpid)
+
+Main monitoring loop. Periodically collects dynamic data, updates
+RRD files, evaluates alerts, and sleeps for the configured delay.
+
+=head2 DetectPlatform($configuration)
+
+Detects whether the application is running on a Raspberry Pi or
+a non-RPi test environment, setting C<testmode> accordingly.
+
+=head1 AUTHOR
+
+Xavier Berger - L<https://rpi-experiences.blogspot.com/>
+
+=cut

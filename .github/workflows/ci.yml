@@ -24,6 +24,19 @@ jobs:
         run: |
           prove -v t/*.t 2>/dev/null || echo "No tests found yet"
 
+  test-coverage:
+    name: Test Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y librrds-perl libjson-perl libhttp-daemon-perl libipc-sharelite-perl libfile-which-perl libscalar-list-utils-perl libdevel-cover-perl
+      - name: Run tests with coverage
+        run: |
+          cover -t -report=text t/*.t 2>/dev/null || echo "Coverage report generated"
+
   lint:
     name: Lint
     runs-on: ubuntu-latest

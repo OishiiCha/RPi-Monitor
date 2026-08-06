@@ -33,6 +33,7 @@ RUN mkdir -p /usr/share/rpimonitor \
     && cp -r src/var/lib/rpimonitor/* /var/lib/rpimonitor/ \
     && cp /build/VERSION /usr/share/rpimonitor/VERSION \
     && chmod +x /usr/bin/rpimonitord \
+    && ln -sf rpimonitord /usr/bin/rpimonitord-snmp \
     && echo 'daemon.addr=0.0.0.0' >> /etc/rpimonitor/daemon.conf \
     && echo 'daemon.testmode=1' >> /etc/rpimonitor/daemon.conf \
     && rm -rf /build

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# Copyright 2013-2018 - Xavier Berger - http://rpi-experiences.blogspot.fr/
+# Copyright 2013-2026 - Xavier Berger - http://rpi-experiences.blogspot.fr/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -136,7 +136,7 @@ RAW DATA ACCESS
 
 AUTHOR
   Xavier Berger
-    http://rpi-experiences.blogspot.fr
+    https://rpi-experiences.blogspot.com
 
 EOF
 }
