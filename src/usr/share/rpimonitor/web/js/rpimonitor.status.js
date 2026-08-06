@@ -48,7 +48,7 @@ function UpdateStatus () {
     $('#message').addClass('hide');
 
     for (var iloop=0; iloop < strips.length; iloop++){
-      eval( 'visibility = '+strips[iloop].visibility )
+      var visibility = safeEval(strips[iloop].visibility, {data: data})
       if ( visibility == 0) {
         $('.row'+iloop).addClass('hide')
       }
@@ -60,7 +60,7 @@ function UpdateStatus () {
         var line = strips[iloop].line[jloop];
         text = text + "<p>";
         try {
-            text = text + eval( line );
+            text = text + safeEval(line, {data: data});
         }
         catch (e) {
           text = text + "ERROR: " + line + " -> " + e;
@@ -73,7 +73,7 @@ function UpdateStatus () {
     }
 
     while((command=postProcessCommand.pop()) != null) {
-      eval( command )
+      safeEvalStmt(command)
     }
 
     ActivatePopover();
@@ -97,12 +97,12 @@ function ConstructPage()
     activePage=0;
   }
   if ( data.length > 1 ) {
-    $('#pageTitle').html("<h2>" + eval(data[activePage].title) + "</h2>" );
+    $('#pageTitle').html("<h2>" + safeEval(data[activePage].title, {data: getData('static')}) + "</h2>" );
     $('#pageTitle').removeClass('hide');
   }
   for ( var iloop=0; iloop < data[activePage].content.length; iloop++) {
     if ( typeof data[activePage].content[iloop].title != 'undefined' ){ 
-      title = eval(data[activePage].content[iloop].title)
+      title = safeEval(data[activePage].content[iloop].title, {data: getData('static')})
     } 
     else {
       title = data[activePage].content[iloop].name

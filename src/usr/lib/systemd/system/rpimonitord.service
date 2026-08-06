@@ -1,10 +1,23 @@
 [Unit]
 Description = System monitor for the Raspberry PI
 After = network.target
+Wants = network-online.target
 
 [Service]
 Type = simple
 ExecStart = /usr/bin/rpimonitord
+Restart = on-failure
+RestartSec = 5
+NoNewPrivileges = true
+ProtectSystem = full
+ProtectHome = true
+PrivateTmp = true
+ReadWritePaths = /var/lib/rpimonitor /var/log
+RestrictAddressFamilies = AF_INET AF_UNIX
+LockPersonality = true
+MemoryDenyWriteExecute = false
+RestrictRealtime = true
+RestrictSUIDSGID = true
 
 [Install]
 WantedBy = multi-user.target

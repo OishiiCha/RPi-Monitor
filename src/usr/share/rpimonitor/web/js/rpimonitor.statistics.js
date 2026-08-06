@@ -39,7 +39,7 @@ function Start() {
     activePage = 0 
   }
   if ( graphconf.length > 1 ) {
-    $('#pageTitle').html("<h2>" + eval(graphconf[activePage].title) + "</h2><hr>" );
+    $('#pageTitle').html("<h2>" + safeEval(graphconf[activePage].title, {data: static, static: static}) + "</h2><hr>" );
     $('#pageTitle').removeClass('hide');
   }
 
@@ -53,7 +53,7 @@ function SetGraphlist() {
     if (activestat == iloop) {
       graphlist += " selected ";
     }
-    graphlist += ">" + eval(graphconf[activePage].content[iloop].title) + "</option>\n";
+    graphlist += ">" + safeEval(graphconf[activePage].content[iloop].title, {data: static, static: static}) + "</option>\n";
   }
   graphlist += "</select>\n";
 
@@ -74,7 +74,7 @@ function FetchGraph() {
   }
   graph = graphconf[activePage].content[activestat].graph;
   for ( var iloop = 0; iloop < graph.length; iloop++) {
-    if (  ( static==null ) || ( eval ( "static."+graph[iloop] ) ) ){
+    if (  ( static==null ) || ( static[graph[iloop]] ) ){
       try {
         FetchBinaryURLAsync('stat/empty.rrd', UpdateHandler, iloop);
       }
@@ -164,7 +164,7 @@ function PrepareGraph(idx) {
     else {
       // If the graph should represent a static data, construct the line
       if ( rrd_data[idx].getDS(0).getName() == "empty" ) {
-        op_list.push(new SetValue( graph[iloop], eval( "static."+graph[iloop] ) ) );
+        op_list.push(new SetValue( graph[iloop], static[graph[iloop]] ) );
       }
       else {
         op_list.push(new DoNothing(rrd_data[idx].getDS(0).getName()));
@@ -184,7 +184,7 @@ function UpdateGraph() {
   for(var graph in ds_graph_options) {
     for(var param in ds_graph_options[graph]) {
       try {
-        ds_graph_options[graph][param]=eval('(' + ds_graph_options[graph][param] + ')');
+        ds_graph_options[graph][param]=safeEval('(' + ds_graph_options[graph][param] + ')');
       }
       catch(e) {
       }
@@ -194,7 +194,7 @@ function UpdateGraph() {
   if ( options.graph_options ) {
     for(var param in options.graph_options) {
       try {
-        graph_options[param]=eval('(' + options.graph_options[param] + ')');
+        graph_options[param]=safeEval('(' + options.graph_options[param] + ')');
       }
       catch(e) {
       }

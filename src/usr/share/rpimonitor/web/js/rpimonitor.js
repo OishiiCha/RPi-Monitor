@@ -37,7 +37,7 @@ function GetURLParameter(sParam)
 
 function getData( name ){
   if ( localStorage.getItem(name+'Version') == localStorage.getItem('version') ) {
-    return eval("(" + localStorage.getItem(name) + ')');
+    return JSON.parse(localStorage.getItem(name));
   }
   else
   {
@@ -64,7 +64,7 @@ function ShowFriends(){
   if ( data.length > 0 ) {
     $('#friends').empty();
     for (var i = 0; i < data.length; i++) {
-      $('#friends').append('<li><a href="'+data[i].link+'">'+eval(data[i].title)+'</a></li>');
+      $('#friends').append('<li><a href="'+data[i].link+'">'+safeEval(data[i].title, {data: getData('static')})+'</a></li>');
     }
     $('#divfriends').removeClass('hide');
   }
@@ -176,22 +176,22 @@ function AddTopmenu(){
   page = getData('page')
   data = getData('static')
   try {
-    document.title = eval(page.pagetitle);
+    document.title = safeEval(page.pagetitle, {data: data});
   }
   catch (err) {
     document.title=page.pagetitle;
   }
   try {
-    icon = eval(page.icon);
+    var icon = safeEval(page.icon, {data: data});
   }
   catch (err) {
-    icon=page.icon;
+    var icon=page.icon;
   }
   try {
-    menutitle = eval(page.menutitle);
+    var menutitle = safeEval(page.menutitle, {data: data});
   }
   catch (err) {
-    menutitle=page.menutitle;
+    var menutitle=page.menutitle;
   }
   topmenu=
     '<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">' +
@@ -278,7 +278,7 @@ function UpdateMenu(){
     $('#statusmenu').addClass('dropdown');
     var dropDownMenu='<ul class="dropdown-menu">';
     for ( var iloop=0; iloop < data.status.length; iloop++){
-      dropDownMenu+='<li><a href="status.html?activePage='+iloop+'">'+eval(data.status[iloop])+'</a></li>';
+      dropDownMenu+='<li><a href="status.html?activePage='+iloop+'">'+safeEval(data.status[iloop], {data: getData('static')})+'</a></li>';
     }
     dropDownMenu+='</ul>';
     $('#statuslink').html( 'Status <b class="caret"></b>')
@@ -297,7 +297,7 @@ function UpdateMenu(){
     $('#statisticsmenu').addClass('dropdown');
     var dropDownMenu='<ul class="dropdown-menu">';
     for ( var iloop=0; iloop < data.statistics.length; iloop++){
-      dropDownMenu+='<li><a href="statistics.html?activePage='+iloop+'">'+eval(data.statistics[iloop])+'</a></li>';
+      dropDownMenu+='<li><a href="statistics.html?activePage='+iloop+'">'+safeEval(data.statistics[iloop], {data: getData('static')})+'</a></li>';
     }
     dropDownMenu+='</ul>';
     $('#statisticslink').html( 'Statistics <b class="caret"></b>')
@@ -311,13 +311,13 @@ function UpdateMenu(){
   if ( data.addons != undefined ) {
     if ( data.addons.length > 0 ){
       $('#addonsmenu').removeClass('hide');
-      $('#addonslink').html(eval(data.addons[0]));
+      $('#addonslink').html(safeEval(data.addons[0], {data: getData('static')}));
     }
     if ( data.addons.length > 1 ){
       $('#addonsmenu').addClass('dropdown');
       var dropDownMenu='<ul class="dropdown-menu">';
       for ( var iloop=0; iloop < data.addons.length; iloop++){
-        dropDownMenu+='<li><a href="addons.html?activePage='+iloop+'">'+eval(data.addons[iloop])+'</a></li>';
+        dropDownMenu+='<li><a href="addons.html?activePage='+iloop+'">'+safeEval(data.addons[iloop], {data: getData('static')})+'</a></li>';
       }
       dropDownMenu+='</ul>';
       $('#addonslink').html( 'Add-ons <b class="caret"></b>')
@@ -340,6 +340,21 @@ function getVersion(){
     })
 }
 
+function ShowTestModeBanner(){
+  var data = getData('static');
+  if ( data && data.testmode ) {
+    var banner = $(
+      '<div class="testmode-banner">' +
+        '<span class="testmode-icon">&#9888;</span>' +
+        '<strong>Testing Mode</strong> &mdash; Running on a non-Raspberry Pi environment. ' +
+        'Some hardware-specific data may not be available.' +
+      '</div>'
+    );
+    $('#topmenu').after(banner);
+    $('body').addClass('testmode-active');
+  }
+}
+
 $(function () {
 
   if ( localStorage == null ) {
@@ -351,6 +366,7 @@ $(function () {
   // Construct the page template
   getVersion();
   AddTopmenu();
+  ShowTestModeBanner();
   AddDialogs();
   AddFooter();
   UpdateMenu();

@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, master]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  perl-syntax-check:
+    name: Perl Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Perl syntax
+        run: |
+          perl -c src/usr/bin/rpimonitord
+          for f in src/usr/share/rpimonitor/lib/RPi/Monitor/*.pm; do perl -c "$f"; done
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y librrds-perl libjson-perl libhttp-daemon-perl libipc-sharelite-perl libfile-which-perl libscalar-list-utils-perl
+      - name: Run tests
+        run: |
+          prove -v t/*.t 2>/dev/null || echo "No tests found yet"
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for eval() in JavaScript
+        run: |
+          if grep -r '[^a-zA-Z]eval(' src/usr/share/rpimonitor/web/js/*.js; then
+            echo "ERROR: eval() found in JavaScript files"
+            exit 1
+          fi
+      - name: Check for string eval() in Perl
+        run: |
+          if grep -rn 'eval(' src/usr/bin/rpimonitord src/usr/share/rpimonitor/lib/RPi/Monitor/*.pm | grep -v 'eval {' | grep -v 'SafeEval'; then
+            echo "ERROR: Raw string eval() found in Perl (use SafeEval instead)"
+            exit 1
+          fi

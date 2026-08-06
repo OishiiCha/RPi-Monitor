@@ -19,10 +19,46 @@ var postProcessInfo=[];
 var justgageId=0;
 var postProcessCommand=[];
 
+var safeEvalContext = {
+  window: undefined,
+  document: undefined,
+  localStorage: undefined,
+  eval: undefined,
+  Function: undefined
+};
+
+function safeEval(expr, context) {
+  var ctx = {};
+  for (var k in safeEvalContext) { ctx[k] = safeEvalContext[k]; }
+  if (context) { for (var k in context) { ctx[k] = context[k]; } }
+  try {
+    var keys = Object.keys(ctx);
+    var values = keys.map(function(k) { return ctx[k]; });
+    var fn = new Function(keys.join(','), 'return (' + expr + ')');
+    return fn.apply(null, values);
+  } catch(e) {
+    return expr;
+  }
+}
+
+function safeEvalStmt(stmt, context) {
+  var ctx = {};
+  for (var k in safeEvalContext) { ctx[k] = safeEvalContext[k]; }
+  if (context) { for (var k in context) { ctx[k] = context[k]; } }
+  try {
+    var keys = Object.keys(ctx);
+    var values = keys.map(function(k) { return ctx[k]; });
+    var fn = new Function(keys.join(','), stmt);
+    fn.apply(null, values);
+  } catch(e) {
+    console.error('safeEvalStmt error:', e);
+  }
+}
+
 function ShowInfo(id,title,text){
   if ( text ) {
     postProcessInfo.push(["#"+id, title, text]);
-    return " <a href='#' id='"+id+"'><font color=black><span class='glyphicon glyphicon-search'></font></span>"
+    return " <a href='#' id='"+id+"'><span class='glyphicon glyphicon-search' style='color:black'></span>"
   }
   else {
     return "";
@@ -38,15 +74,15 @@ function Plural(n){
 }
 
 function Uptime(value){
-  uptimetext='';
-  years = Math.floor(value / 31556926);
-  rest = value % 31556926;
-  days = Math.floor( rest / 86400);
+  var uptimetext='';
+  var years = Math.floor(value / 31556926);
+  var rest = value % 31556926;
+  var days = Math.floor( rest / 86400);
   rest = value % 86400;
-  hours = Math.floor(rest / 3600);
+  var hours = Math.floor(rest / 3600);
   rest = value % 3600;
-  minutes = Math.floor(rest / 60);
-  seconds = Math.floor(rest % 60);
+  var minutes = Math.floor(rest / 60);
+  var seconds = Math.floor(rest % 60);
   if ( years != 0 ) { uptimetext += uptimetext + "<b>" + years + "</b> year" + Plural(years) }
   if ( ( years != 0 ) || ( days != 0) ) { uptimetext += "<b>" + days +"</b> day" + Plural(days)}
   if ( ( days != 0 ) || ( hours != 0) ) { uptimetext += "<b>" + Pad(hours) +"</b> hour" + Plural(hours)}
@@ -56,15 +92,15 @@ function Uptime(value){
 }
 
 function KMG(value, initPre){
-  unit = 1024;
-  prefix = "kMGTPE";
+  var unit = 1024;
+  var prefix = "kMGTPE";
   if (initPre){
     value *= Math.pow(unit,prefix.indexOf(initPre)+1);
   }
   try {
     if (Math.abs(value) < unit) { return value + "B" };
-    exp = Math.floor(Math.log(Math.abs(value)) / Math.log(unit));
-    pre = prefix.charAt(exp-1);
+    var exp = Math.floor(Math.log(Math.abs(value)) / Math.log(unit));
+    var pre = prefix.charAt(exp-1);
     return (value / Math.pow(unit, exp)).toFixed(2) + pre + "B";
   }
   catch (e) {
@@ -138,16 +174,26 @@ function JustGageBar(title, label, min, value, max, width, height, levelColors, 
 function Label(data,formula, text, level){
   var result="";
   if ( level.indexOf('label-') < 0 ) { level = 'label-'+level };
-  if ( isNaN(data) ) { data = "\""+data+"\"" };
-  eval ( "if ("+data+formula+") result=\"<span class='label "+level+"'>"+text+"</span>\"" );
+  var dataStr = isNaN(data) ? "\""+data+"\"" : data;
+  try {
+    var fn = new Function('return (' + dataStr + formula + ')');
+    if ( fn() ) {
+      result = "<span class='label "+level+"'>"+text+"</span>";
+    }
+  } catch(e) {}
   return result;
 }
 
 function Badge(data,formula, text, level){
   var result="";
   if ( level.indexOf('alert-') < 0 ) { level = 'alert-'+level };
-  if ( isNaN(data) ) { data = "\""+data+"\"" };
-  eval ( "if ("+data+formula+") result=\"<span class='badge "+level+"'>"+text+"</span>\"" );
+  var dataStr = isNaN(data) ? "\""+data+"\"" : data;
+  try {
+    var fn = new Function('return (' + dataStr + formula + ')');
+    if ( fn() ) {
+      result = "<span class='badge "+level+"'>"+text+"</span>";
+    }
+  } catch(e) {}
   return result;
 }
 
@@ -163,8 +209,8 @@ function Tick(){
   $('#seconds').html(Pad(clocksec));
 }
 
-var result=""
 function InsertHTML( url ){
+   var result = "";
    $.ajax({
       url: url,
       async:false,

@@ -120,3 +120,29 @@ body {
     column-count: 3;
   }
 }
+
+/* Testing mode banner (non-Raspberry Pi environment) */
+.testmode-banner {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  padding: 8px 15px;
+  text-align: center;
+  background: linear-gradient(90deg, #fff3cd 0%, #ffe69c 50%, #fff3cd 100%);
+  border-bottom: 2px solid #f0ad4e;
+  color: #8a6d3b;
+  font-family: Tahoma, Helvetica, sans-serif;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.testmode-banner .testmode-icon {
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+body.testmode-active {
+  padding-top: 90px;
+}
