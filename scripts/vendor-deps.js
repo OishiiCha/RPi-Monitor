@@ -27,8 +27,8 @@ const copies = [
   },
   // Chart.js date-fns adapter
   {
-    src: 'node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.kurkle.js',
-    dest: 'chartjs-adapter-date-fns.bundle.kurkle.min.js',
+    src: 'node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js',
+    dest: 'chartjs-adapter-date-fns.bundle.min.js',
     dir: webrootJs,
   },
   // QRCode.js
