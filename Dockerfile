@@ -3,12 +3,19 @@ FROM perl:5.36-slim-bookworm
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     librrds-perl \
-    libjson-perl \
-    libio-socket-ssl-perl \
-    libyaml-libyaml-perl \
-    libfile-which-perl \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
+
+# Copy RRDs from system Perl path into container Perl's @INC
+# (apt installs to /usr/share/perl5 and /usr/lib/*/perl5, but the
+# perl:5.36-slim image uses /usr/local/lib/perl5)
+RUN set -e; \
+    find /usr/share/perl5 /usr/lib -name 'RRDs.pm' -exec cp {} /usr/local/lib/perl5/site_perl/5.36.3/ \; ; \
+    RRD_SO=$(find /usr/lib -path '*/auto/RRDs/RRDs.so' -print -quit); \
+    if [ -n "$RRD_SO" ]; then \
+      mkdir -p /usr/local/lib/perl5/site_perl/5.36.3/aarch64-linux-gnu/auto/RRDs; \
+      cp "$RRD_SO" /usr/local/lib/perl5/site_perl/5.36.3/aarch64-linux-gnu/auto/RRDs/; \
+    fi
 
 WORKDIR /build
 
