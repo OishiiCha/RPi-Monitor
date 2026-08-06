@@ -1,7 +1,6 @@
 package RPi::Monitor::SnmpModule;
 use strict;
 use warnings;
-use IPC::ShareLite;
 use SNMP::Extension::PassPersist;
 use Scalar::Util qw(looks_like_number);
 use POSIX;
@@ -102,9 +101,20 @@ sub UpdateTree
     foreach my $key (keys %{$var}) {
         AddOid($configuration, $var, $key);
     }
-    $var = decode_json($self->{'configuration'}->{'sharedmem'}->fetch());
-    foreach my $key (keys %{$var}) {
-        AddOid($configuration, $var, $key);
+    # Read dynamic data from file-based IPC (dynamic.json)
+    my $dyn_file = $configuration->{'daemon'}->{'datastore'} . "/dynamic.json";
+    if ( -f $dyn_file ) {
+        open my $fh, '<', $dyn_file or do {
+            $self->Debug(1, "Cannot open $dyn_file: $!");
+            return;
+        };
+        local $/;
+        my $json_text = <$fh>;
+        close $fh;
+        $var = decode_json($json_text);
+        foreach my $key (keys %{$var}) {
+            AddOid($configuration, $var, $key);
+        }
     }
 }
 

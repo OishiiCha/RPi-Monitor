@@ -5,7 +5,7 @@ use POSIX;
 use Cwd 'abs_path';
 use Data::Dumper;
 use RRDs;
-use YAML::XS;
+use YAML::XS ();
 
 our $VERSION = "{DEVELOPMENT}";
 
