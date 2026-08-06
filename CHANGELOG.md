@@ -52,6 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed `getData()` bug: `name.json` (string property access) → `name + '.json'` (concatenation) in error message
 - Updated About dialog: replaced references to jsqrencode/javascriptrrd/Flot with Chart.js/qrcodejs
 - Updated docker-compose: external port 3080, removed obsolete `shm_size` (IPC::ShareLite removed)
+- Fixed blogspot.fr → blogspot.com link in navbar dropdown
+- Removed obsolete `#daemon.sharedmemkey` comment from `daemon.conf`
 
 ### Build & Deploy
 - Hardened systemd unit file with `NoNewPrivileges`, `ProtectSystem`, `ProtectHome`, `PrivateTmp`, `RestrictAddressFamilies`, etc.
@@ -68,6 +70,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added sample YAML configs: `daemon.yaml.example`, `data.yaml.example`, `cpu.yaml.example`
 - Added `npm run vendor` script and `scripts/vendor-deps.js` to copy JS libs from `node_modules` to webroot
 - Replaced vendored JS libraries (flot, javascriptrrd, jsqrencode) with npm-managed dependencies; no git submodules remain
+- Updated README: Docker port 3080, YAML config docs, migration tool usage, modern frontend stack table, npm/Vite workflow, expanded test instructions
+- Updated `cpanfile`, `Dockerfile`, CI/release workflows, and deb dependencies to include `YAML::XS` (`libyaml-libyaml-perl`)
+
 ### Architecture
 - Replaced HTTP::Daemon with Mojolicious web framework in Server.pm
 - Added WebSocket endpoint (`/ws`) for real-time dynamic data push
@@ -95,6 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `.editorconfig` for consistent formatting
 - Added GitHub Actions CI workflow (syntax check, lint, test)
 - Added basic test framework with `t/00-safeeval.t`
+- Added `.gitignore` entries for `node_modules/`, vendored JS files (now npm-managed)
 
 ## [2.13] - Previous release
 - See `docs/source/43_changelog.rst` for historical changelog
