@@ -1,6 +1,6 @@
 // RPi-Monitor Service Worker
 // Caches static assets for offline use
-var CACHE_NAME = 'rpimonitor-v1';
+var CACHE_NAME = 'rpimonitor-v2';
 var CACHE_URLS = [
   './',
   './index.html',
@@ -12,8 +12,14 @@ var CACHE_URLS = [
   './css/rpimonitor.css',
   './js/jquery.min.js',
   './js/bootstrap.min.js',
+  './js/chart.umd.min.js',
+  './js/chartjs-adapter-date-fns.bundle.min.js',
   './js/rpimonitor.js',
   './js/rpimonitor.utils.js',
+  './js/rpimonitor.status.js',
+  './js/rpimonitor.statistics.js',
+  './js/qrcode.min.js',
+  './img/favicon.svg',
   './img/favicon.png'
 ];
 

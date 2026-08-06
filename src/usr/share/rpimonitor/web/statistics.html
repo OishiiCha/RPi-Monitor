@@ -16,16 +16,21 @@
 #
 -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <title>RPi-Monitor</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="RPi-Monitor">
     <meta name="author" content="RPi-Experiences">
-    <meta name="theme-color" content="#0d6efd">
+    <meta name="theme-color" content="#6366f1">
     <link rel="manifest" href="./manifest.json">
     <meta http-equiv="Cache-control" content="public" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
@@ -33,7 +38,7 @@
     <link href="./css/rpimonitor.css" rel="stylesheet">
 
     <!-- Favicon-->
-    <link rel="shortcut icon" type="image/png" href="./img/favicon.png">
+    <link rel="shortcut icon" type="image/svg+xml" href="./img/favicon.svg">
   </head>
 
   <body>
@@ -46,11 +51,14 @@
     <div class="text-info page-title d-none" id="pageTitle" role="heading" aria-level="1"></div>
     <div class="container-fluid" role="main">
       <i id="insertionPoint"></i>
-      <table id="infotable" class="border-0" role="presentation">
+      <table id="infotable" class="border-0 d-none" role="presentation">
         <tr><td></td></tr>
       </table>
-      <div id="preloader" class="text-center" role="status" aria-label="Loading"><img src="img/preloader.gif" alt="Loading..."></div>
-      <div id="mygraph" role="img" aria-label="Statistics graph"></div>
+      <div id="preloader" class="text-center" role="status" aria-label="Loading"></div>
+      <div id="mygraph_res_title"></div>
+      <div id="graph-container">
+        <canvas id="mygraph" role="img" aria-label="Statistics graph"></canvas>
+      </div>
     </div>
 
     <!-- Fixed footer -->
@@ -68,6 +76,7 @@
     <script src="./js/chartjs-adapter-date-fns.bundle.min.js"></script>
 
     <script src="./js/rpimonitor.js" charset="utf-8"></script>
+    <script src="./js/rpimonitor.utils.js" charset="utf-8"></script>
     <script src="./js/rpimonitor.statistics.js" charset="utf-8"></script>
     <script src="./js/qrcode.min.js"></script>
   </body>

@@ -160,7 +160,7 @@
         });
 
         var label = dsOpts.label || s.name;
-        var color = dsOpts.color || ['#0d6efd', '#dc3545', '#198754', '#ffc107', '#6610f2'][idx % 5];
+        var color = dsOpts.color || ['#6366f1', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6'][idx % 5];
 
         var dataPoints = s.data.map(function(point) {
           return { x: point[0] * 1000, y: point[1] };
@@ -194,15 +194,19 @@
           x: {
             type: 'time',
             time: { displayFormats: { second: 'HH:mm:ss', minute: 'HH:mm', hour: 'MM/DD HH:mm', day: 'MM/DD' } },
-            title: { display: true, text: 'Time' }
+            title: { display: true, text: 'Time', color: '#9ba1ae' },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: '#9ba1ae', font: { size: 11 } }
           },
           y: {
-            title: { display: true, text: (graphOptions && graphOptions.yLabel) || 'Value' }
+            title: { display: true, text: (graphOptions && graphOptions.yLabel) || 'Value', color: '#9ba1ae' },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: '#9ba1ae', font: { size: 11 } }
           }
         },
         plugins: {
-          legend: { display: true, position: 'bottom' },
-          tooltip: { mode: 'index', intersect: false }
+          legend: { display: true, position: 'bottom', labels: { color: '#e4e6eb', font: { size: 12 }, padding: 16, usePointStyle: true, pointStyle: 'circle' } },
+          tooltip: { mode: 'index', intersect: false, backgroundColor: '#1e2230', titleColor: '#e4e6eb', bodyColor: '#9ba1ae', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, padding: 12, cornerRadius: 8 }
         }
       }
     });

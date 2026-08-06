@@ -84,7 +84,7 @@
   function ShowInfo(id,title,text){
     if ( text ) {
       postProcessInfo.push([`#${id}`, title, text]);
-      return ` <a href='#' id='${id}'><svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='currentColor' class='bi bi-search' viewBox='0 0 16 16'><path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/></svg>`;
+      return ` <a href='#' id='${id}'><i class='bi bi-info-circle' style='color:var(--rpm-accent)'></i></a>`;
     }
     else {
       return "";
@@ -283,6 +283,75 @@
     return `<a target='${target}' href='statistics.html?activePage=${page}&graph=${graph}'>${text}</a>`
   }
 
+  function CompactUptime(value){
+    var days = Math.floor(value / 86400);
+    var hours = Math.floor((value % 86400) / 3600);
+    var mins = Math.floor((value % 3600) / 60);
+    var secs = Math.floor(value % 60);
+    var parts = [];
+    if (days > 0) parts.push(days + 'd');
+    if (hours > 0 || days > 0) parts.push(hours + 'h');
+    if (mins > 0 || hours > 0 || days > 0) parts.push(mins + 'm');
+    parts.push(secs + 's');
+    return `<span class="rpm-uptime-compact">${parts.join(' ')}</span>`;
+  }
+
+  function TempColor(temp, warn, crit){
+    warn = warn || 60;
+    crit = crit || 75;
+    if (temp >= crit) return `<span class="rpm-temp-hot">${temp}°C</span>`;
+    if (temp >= warn) return `<span class="rpm-temp-warm">${temp}°C</span>`;
+    return `<span class="rpm-temp-cool">${temp}°C</span>`;
+  }
+
+  function Sparkline(values, width, height, color){
+    width = width || 60;
+    height = height || 20;
+    color = color || '#6366f1';
+    if (!values || values.length < 2) return '';
+    var min = Math.min.apply(null, values);
+    var max = Math.max.apply(null, values);
+    var range = max - min || 1;
+    var step = width / (values.length - 1);
+    var points = values.map(function(v, i){
+      var x = (i * step).toFixed(1);
+      var y = (height - ((v - min) / range) * height).toFixed(1);
+      return x + ',' + y;
+    }).join(' ');
+    var id = 'spark' + Math.random().toString(36).substr(2,9);
+    return `<span class="rpm-sparkline"><svg width="${width}" height="${height}"><polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+  }
+
+  function RingChart(percent, label, size, color){
+    size = size || 60;
+    color = color || '#6366f1';
+    var stroke = 6;
+    var r = (size - stroke) / 2;
+    var circ = 2 * Math.PI * r;
+    var offset = circ - (percent / 100) * circ;
+    var id = 'ring' + Math.random().toString(36).substr(2,9);
+    return `<span class="rpm-ring" style="width:${size}px;height:${size}px">` +
+      `<svg width="${size}" height="${size}">` +
+      `<circle class="rpm-ring-bg" cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${stroke}"/>` +
+      `<circle class="rpm-ring-fg" cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${stroke}" stroke="${color}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>` +
+      `</svg>` +
+      `<span class="rpm-ring-label">${label || percent + '%'}</span>` +
+      `</span>`;
+  }
+
+  function ExportData(name, data){
+    var json = JSON.stringify(data, null, 2);
+    var blob = new Blob([json], {type: 'application/json'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = name + '-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   // Expose to global scope for legacy compatibility
   window.safeEval = safeEval;
   window.safeEvalStmt = safeEvalStmt;
@@ -300,6 +369,11 @@
   window.Tick = Tick;
   window.InsertHTML = InsertHTML;
   window.LinkToGraph = LinkToGraph;
+  window.CompactUptime = CompactUptime;
+  window.TempColor = TempColor;
+  window.Sparkline = Sparkline;
+  window.RingChart = RingChart;
+  window.ExportData = ExportData;
   window.postProcessInfo = postProcessInfo;
   window.postProcessCommand = postProcessCommand;
   window.justgageId = justgageId;

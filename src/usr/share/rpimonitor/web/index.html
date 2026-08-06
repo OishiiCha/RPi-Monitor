@@ -1,32 +1,19 @@
 <!DOCTYPE html>
-<!--
-# Copyright 2013-2026 - Xavier Berger - http://rpi-experiences.blogspot.fr/
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
--->
-<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <title>RPi-Monitor</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RPi-Monitor">
+    <meta name="description" content="RPi-Monitor - Real-time monitoring for embedded devices">
     <meta name="author" content="RPi-Experiences">
-    <meta name="theme-color" content="#0d6efd">
+    <meta name="theme-color" content="#6366f1">
     <link rel="manifest" href="./manifest.json">
     <meta http-equiv="Cache-control" content="public" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
@@ -34,7 +21,7 @@
     <link href="./css/rpimonitor.css" rel="stylesheet">
 
     <!-- Favicon-->
-    <link rel="shortcut icon" type="image/png" href="./img/favicon.png">
+    <link rel="shortcut icon" type="image/svg+xml" href="./img/favicon.svg">
   </head>
 
   <body>
@@ -42,19 +29,33 @@
     <!-- Fixed navbar -->
     <div id='topmenu' role="navigation" aria-label="Main navigation"></div>
 
-    <!-- Begin page content -->
-    &nbsp;<br>
-    <div class="container-fluid" role="main">
-      <div class="card card-body bg-body-tertiary text-center p-5 mb-4">
-        <h1><b>RPi</b>-<b>Monitor</b></h1>
-        <p>Welcome to <b>RPi-Monitor</b> web interface.</p>
-        <p><a href="status.html" class="btn btn-lg btn-success" role="button">Start</a></p>
+    <!-- Hero landing page -->
+    <div class="rpm-hero" role="main">
+      <h1>RPi-Monitor</h1>
+      <p>Real-time monitoring for embedded devices</p>
+      <p><a href="status.html" class="btn btn-lg btn-success" role="button">Get Started</a></p>
+      <div class="rpm-hero-cards">
+        <div class="rpm-hero-card">
+          <i class="bi bi-speedometer2"></i>
+          <h3>Status</h3>
+          <p>Live system metrics</p>
+        </div>
+        <div class="rpm-hero-card">
+          <i class="bi bi-graph-up-arrow"></i>
+          <h3>Statistics</h3>
+          <p>Historical graphs</p>
+        </div>
+        <div class="rpm-hero-card">
+          <i class="bi bi-puzzle"></i>
+          <h3>Add-ons</h3>
+          <p>Extensible plugins</p>
+        </div>
       </div>
     </div>
 
     <!-- Fixed footer -->
     <div id="footer" role="contentinfo"></div>
- 
+
     <!-- Dialog place holder -->
     <div id="dialogs" role="region" aria-label="Dialogs"></div>
 
@@ -62,6 +63,7 @@
     <script src="./js/jquery.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
     <script src="./js/rpimonitor.js" charset="utf-8"></script>
+    <script src="./js/rpimonitor.utils.js" charset="utf-8"></script>
     <script src="./js/rpimonitor.index.js" charset="utf-8"></script>
     <script src="./js/qrcode.min.js"></script>
   </body>

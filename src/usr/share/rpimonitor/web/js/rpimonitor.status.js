@@ -29,10 +29,21 @@
   var clockId;
 
   function RowTemplate(id,image,title){
+    var iconClass = 'bi bi-card-text';
+    var imgName = (image || '').replace(/^img\//, '').replace(/\.(png|jpg|svg)$/, '');
+    var iconMap = {
+      'cpu': 'bi-cpu', 'cpu_temp': 'bi-thermometer-half', 'memory': 'bi-memory',
+      'swap': 'bi-hdd-stack', 'sd': 'bi-sd-card', 'usb_hdd': 'bi-hdd',
+      'network': 'bi-ethernet', 'wifi': 'bi-wifi', 'uptime': 'bi-clock-history',
+      'pmu': 'bi-power', 'daemons': 'bi-gear', 'version': 'bi-tag',
+      'user': 'bi-person', 'avatar': 'bi-person-circle', 'ok': 'bi-check-circle',
+      'warning': 'bi-exclamation-triangle', 'timesync': 'bi-clock',
+      'tor': 'bi-shield', 'printer': 'bi-printer', 'logo': 'bi-house'
+    };
+    if (iconMap[imgName]) { iconClass = 'bi ' + iconMap[imgName]; }
     return `<div data-id='${id}' class='row row${id} list-group-item' style='border: none'>` +
-      `<hr class='row${id}' draggable='false'>` +
       `<div class='Title' draggable='false'>` +
-      `<img src='${image}' alt='${title}' class='DragHandle' draggable='false'> &nbsp;${title}` +
+      `<i class='${iconClass}' style='font-size:1.3rem;color:var(--rpm-accent)'></i> ${title}` +
       `</div>` +
       `<div class='Text' id='Text${id}' draggable='false'><b></b></div>` +
       `</div>`;
@@ -90,6 +101,7 @@
   }
 
   function UpdateStatus () {
+    ShowRefreshAnimation();
     window.justgageId = 0;
     $("#packages").empty();
 
@@ -139,12 +151,62 @@
     UpdateStatus();
   }
 
+  function AddSearchBar(){
+    var search = `<div class="rpm-search"><input type="text" id="rpm-status-search" placeholder="Filter metrics..." aria-label="Search metrics"></div>`;
+    $(search).insertBefore('#sortableListGroup');
+    $('#rpm-status-search').on('input', function(){
+      var q = $(this).val().toLowerCase();
+      $('#sortableListGroup .row.list-group-item').each(function(){
+        var text = $(this).text().toLowerCase();
+        $(this).toggleClass('hide', q && text.indexOf(q) < 0);
+      });
+    });
+  }
+
+  function AddExportButton(){
+    var btn = `<button class="rpm-export-btn ms-2" id="rpm-export" title="Export data as JSON"><i class="bi bi-download"></i> Export</button>`;
+    if ( $('#pageTitle').hasClass('hide') ) {
+      $('#pageTitle').removeClass('hide');
+    }
+    $('#pageTitle').append(btn);
+    $('#rpm-export').on('click', function(){
+      var dyn = getData('dynamic');
+      var stat = getData('static');
+      ExportData('rpimonitor-status', { static: stat, dynamic: dyn, timestamp: new Date().toISOString() });
+    });
+  }
+
+  function ActivateCollapsible(){
+    $('#sortableListGroup').on('click', '.Title', function(e){
+      if ($(e.target).closest('.DragHandle').length) return;
+      $(this).closest('.row.list-group-item').toggleClass('collapsed');
+    });
+  }
+
+  function AddRefreshIndicator(){
+    var icon = `<i class="bi bi-arrow-clockwise rpm-refresh-icon" id="rpm-refresh-indicator"></i>`;
+    if ( !$('#pageTitle').hasClass('hide') ) {
+      $('#pageTitle').prepend(icon);
+    } else {
+      $('.container-fluid.column-fluid').before(icon);
+    }
+  }
+
+  function ShowRefreshAnimation(){
+    var el = document.getElementById('rpm-refresh-indicator');
+    if (el) {
+      el.classList.add('spinning');
+      setTimeout(function(){ el.classList.remove('spinning'); }, 800);
+    }
+  }
+
   function AddOption()
   {
     var options = `<p><b>Status</b><br>` +
       `<form class="form-inline">` +
       `<input type="checkbox" id="statusautorefresh"> Auto refresh status page` +
-      `</form></p>`;
+      `</form></p>` +
+      `<p><small class="text-muted">Keyboard: <span class="rpm-kbd">S</span> Status <span class="rpm-kbd">G</span> Statistics <span class="rpm-kbd">A</span> Add-ons <span class="rpm-kbd">H</span> Home <span class="rpm-kbd">?</span> About</small></p>`;
     $(options).insertBefore("#optionsInsertionPoint");
   }
 
@@ -159,6 +221,10 @@
     doqr(document.URL);
 
     ConstructPage();
+    AddSearchBar();
+    AddRefreshIndicator();
+    AddExportButton();
+    ActivateCollapsible();
     AddOption();
 
     $('#statusautorefresh').attr('checked', statusautorefresh );

@@ -124,12 +124,12 @@
  */
   function AddFooter(){
     $('#footer').html(
-      `<div class="navbar navbar-dark bg-dark fixed-bottom text-center">` +
-      `<small class="text-secondary">` +
+      `<div class="navbar fixed-bottom text-center">` +
+      `<small>` +
       `<a href="https://rpi-experiences.blogspot.com/">RPi-Experiences</a>` +
-      ` <span class="text-secondary">|</span> ` +
+      ` <span>|</span> ` +
       `<a href="https://github.com/XavierBerger/RPi-Monitor">GitHub</a>` +
-      ` <span class="text-secondary">|</span> ` +
+      ` <span>|</span> ` +
       `<a href="https://www.raspberrypi.org/">Raspberry Pi Foundation</a>` +
       `</small>` +
       `</div>`
@@ -193,7 +193,7 @@
       `<a href="https://xavierberger.github.io/RPi-Monitor-docs/index.html">Documentation</a>` +
       `<hr>` +
       `<p><b>RPi-Monitor</b> is free software developed on top of other open source ` +
-      `tools: <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://jquery.com/">jQuery</a>, <a href="https://www.chartjs.org/">Chart.js</a>, <a href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a>.<br>` +
+      `tools: <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://jquery.com/">jQuery</a>, <a href="https://www.chartjs.org/">Chart.js</a>, <a href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a>, <a href="https://icons.getbootstrap.com/">Bootstrap Icons</a>.<br>` +
       `<p><b>Raspberry Pi</b> and the Raspberry Pi logo are properties of <a href="https://www.raspberrypi.org/">Raspberry Pi Foundation</a>.</p>` +
       `</div>` +
       `<div class="modal-footer">` +
@@ -218,37 +218,36 @@
     try { menutitle = safeEval(page.menutitle, {data: data}); }
     catch (err) { menutitle = page.menutitle; }
     var topmenu =
-      `<nav class="navbar navbar-dark bg-dark fixed-top" data-bs-theme="dark">` +
+      `<nav class="navbar navbar-expand-md fixed-top" data-bs-theme="dark">` +
       `<div class="container-fluid">` +
-      `<div class="navbar-header">` +
-      `<button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1">` +
+      `<a class="navbar-brand" href="index.html"><img height="24" src="${icon}"> ${menutitle}</a>` +
+      `<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarMain">` +
       `<span class="navbar-toggler-icon"></span></button>` +
-      `<a class="navbar-brand" href="index.html"><img height="20" src="${icon}"> &nbsp;${menutitle}</a>` +
-      `</div>` +
-      `<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">` +
-      `<ul class="navbar-nav">` +
-      `<li id="statusmenu" class="nav-item"><a id="statuslink" class="nav-link" href="status.html">Status</a></li>` +
-      `<li id="statisticsmenu" class="nav-item"><a id="statisticslink" class="nav-link" href="statistics.html">Statistics</a></li>` +
-      `<li id="addonsmenu" class="nav-item hide"><a id="addonslink" class="nav-link" href="addons.html">Add-ons</a></li>` +
-      `<li id="optionsmenu" class="nav-item"><a class="nav-link" href="#Options" data-bs-toggle="modal">Options</a></li>` +
+      `<div class="collapse navbar-collapse" id="navbarMain">` +
+      `<ul class="navbar-nav me-auto">` +
+      `<li id="statusmenu" class="nav-item"><a id="statuslink" class="nav-link" href="status.html"><i class="bi bi-speedometer2"></i> Status</a></li>` +
+      `<li id="statisticsmenu" class="nav-item"><a id="statisticslink" class="nav-link" href="statistics.html"><i class="bi bi-graph-up-arrow"></i> Statistics</a></li>` +
+      `<li id="addonsmenu" class="nav-item hide"><a id="addonslink" class="nav-link" href="addons.html"><i class="bi bi-puzzle"></i> Add-ons</a></li>` +
+      `<li id="optionsmenu" class="nav-item"><a class="nav-link" href="#Options" data-bs-toggle="modal"><i class="bi bi-gear"></i> Options</a></li>` +
       `<li class="nav-item dropdown">` +
-      `<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">About</a>` +
+      `<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-info-circle"></i> About</a>` +
       `<ul class="dropdown-menu">` +
       `<li><h6 class="dropdown-header">RPi-Monitor</h6></li>` +
       `<li><a class="dropdown-item" href="#" title="Scan this qrcode to reach this page from your smartphone or tablet"><canvas id="qrcanv"></canvas></a></li>` +
-      `<li><a class="dropdown-item" href="#License" data-bs-toggle="modal">License</a></li>` +
-      `<li><a class="dropdown-item" href="#About" data-bs-toggle="modal">About</a></li>` +
+      `<li><a class="dropdown-item" href="#License" data-bs-toggle="modal"><i class="bi bi-file-earmark-text"></i> License</a></li>` +
+      `<li><a class="dropdown-item" href="#About" data-bs-toggle="modal"><i class="bi bi-info-square"></i> About</a></li>` +
       `<li><hr class="dropdown-divider"></li>` +
       `<li><h6 class="dropdown-header">Related links</h6></li>` +
-      `<li><a class="dropdown-item" href="https://xavierberger.github.io/RPi-Monitor-docs/index.html">Documentation</a></li>` +
-      `<li><a class="dropdown-item" href="https://rpi-experiences.blogspot.com/">RPi-Experiences</a></li>` +
-      `<li><a class="dropdown-item" href="https://github.com/XavierBerger/RPi-Monitor">RPi-Monitor on GitHub</a></li>` +
+      `<li><a class="dropdown-item" href="https://xavierberger.github.io/RPi-Monitor-docs/index.html"><i class="bi bi-book"></i> Documentation</a></li>` +
+      `<li><a class="dropdown-item" href="https://rpi-experiences.blogspot.com/"><i class="bi bi-link-45deg"></i> RPi-Experiences</a></li>` +
+      `<li><a class="dropdown-item" href="https://github.com/XavierBerger/RPi-Monitor"><i class="bi bi-github"></i> GitHub</a></li>` +
       `</ul></li></ul>` +
       `<div class="float-end hide" id="divfriends">` +
       `<ul class="navbar-nav"><li class="nav-item dropdown">` +
-      `<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Friends</a>` +
+      `<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-people"></i> Friends</a>` +
       `<ul class="dropdown-menu dropdown-menu-end" id="friends"></ul>` +
       `</li></ul></div>` +
+      `<div id="rpm-clock" class="ms-2"></div>` +
       `</div></div></nav>`;
     $('#topmenu').html(topmenu);
   }
@@ -378,10 +377,7 @@
  */
   function doqr(url){
     $('#footer').append(`<a href="#" id="qrlink" class="qr-link" title="Show QR Code">` +
-      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" ` +
-      `class="bi bi-qr-code" viewBox="0 0 16 16">` +
-      `<path d="M2 2a0 0 0 0 1 0 0v2a0 0 0 0 1-0 0H4a0 0 0 0 1-0 0V2a0 0 0 0 0-1-0 0H2Zm6 0a0 0 0 0 0-1 0 0v2a0 0 0 0 1 0 0h2a0 0 0 0 1-0 0V2a0 0 0 0 0-1-0 0H8ZM2 8a0 0 0 0 0-1 0 0v2a0 0 0 0 1 0 0h2a0 0 0 0 1-0 0V8a0 0 0 0 0-1-0 0H2Zm6 0a0 0 0 0 0-1 0 0v2a0 0 0 0 1 0 0h.5a0 0 0 0 1-0 0V8a0 0 0 0 0-1-0 0H8ZM8 12a0 0 0 0 0-1 0 0v.5a0 0 0 0 1 0 0h.5a0 0 0 0 1-0 0V12a0 0 0 0 0-1-0 0H8Zm2-4a0 0 0 0 0-1 0 0v.5a0 0 0 0 1 0 0H12a0 0 0 0 1-0 0V8a0 0 0 0 0-1-0 0H10Zm2-6a0 0 0 0 0-1 0 0v2a0 0 0 0 1 0 0h2a0 0 0 0 1-0 0V2a0 0 0 0 0-1-0 0H12Zm0 6a0 0 0 0 0-1 0 0v2a0 0 0 0 1 0 0h2a0 0 0 0 1-0 0V8a0 0 0 0 0-1-0 0H12Zm-4 4a0 0 0 0 0-1 0 0v2a0 0 0 0 1 0 0h2a0 0 0 0 1-0 0V12a0 0 0 0 0-1-0 0H8Zm-6 0a0 0 0 0 0-1 0 0v2a0 0 0 0 1 0 0h2a0 0 0 0 1-0 0V12a0 0 0 0 0-1-0 0H2Z"/>` +
-      `</svg></a>`);
+      `<i class="bi bi-qr-code"></i></a>`);
 
     $('#qrlink').off('click').on('click', function(e) {
       e.preventDefault();
@@ -399,6 +395,56 @@
     });
   }
 
+  function StartClock(){
+    function tick() {
+      var now = new Date();
+      var h = String(now.getHours()).padStart(2,'0');
+      var m = String(now.getMinutes()).padStart(2,'0');
+      var s = String(now.getSeconds()).padStart(2,'0');
+      var el = document.getElementById('rpm-clock');
+      if (el) el.innerHTML = '<span>'+h+'</span>:<span>'+m+'</span>:<span>'+s+'</span>';
+    }
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  function AddStatusBadge(){
+    var badge = `<li class="nav-item d-flex align-items-center"><span class="rpm-status-badge" id="rpm-status-badge"><span class="dot"></span> Online</span></li>`;
+    $('#navbarMain').find('.navbar-nav').first().append(badge);
+    $.getJSON('dynamic.json', function(){ $('#rpm-status-badge').html('<span class="dot"></span> Online'); })
+      .fail(function(){ $('#rpm-status-badge').addClass('offline').html('<span class="dot"></span> Offline'); });
+  }
+
+  function AddThemeToggle(){
+    var current = localStorage.getItem('rpm-theme') || 'dark';
+    document.documentElement.setAttribute('data-bs-theme', current);
+    var icon = current === 'dark' ? 'bi-sun' : 'bi-moon-stars';
+    var btn = `<button class="rpm-theme-toggle" id="rpm-theme-toggle" title="Toggle theme"><i class="bi ${icon}"></i></button>`;
+    $('#navbarMain').find('.navbar-nav').first().after('<div class="d-flex align-items-center ms-2">' + btn + '</div>');
+    $('#rpm-theme-toggle').on('click', function(){
+      var cur = document.documentElement.getAttribute('data-bs-theme') || 'dark';
+      var next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-bs-theme', next);
+      localStorage.setItem('rpm-theme', next);
+      var ic = next === 'dark' ? 'bi-sun' : 'bi-moon-stars';
+      $(this).html('<i class="bi ' + ic + '"></i>');
+    });
+  }
+
+  function AddKeyboardShortcuts(){
+    $(document).on('keydown', function(e){
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      var path = window.location.pathname.split('/').pop();
+      switch(e.key.toLowerCase()){
+        case 's': if (path !== 'status.html') window.location.href = 'status.html'; break;
+        case 'g': if (path !== 'statistics.html') window.location.href = 'statistics.html'; break;
+        case 'a': if (path !== 'addons.html') window.location.href = 'addons.html'; break;
+        case 'h': if (path !== 'index.html') window.location.href = 'index.html'; break;
+        case '?': $('#About').modal('show'); break;
+      }
+    });
+  }
+
   $(function () {
     if ( localStorage == null ) {
       alert(`TypeError: localStorage is null\n\nActivate HTML5 localStorage before continuing.`);
@@ -410,6 +456,10 @@
     AddDialogs();
     AddFooter();
     UpdateMenu();
+    AddStatusBadge();
+    AddThemeToggle();
+    StartClock();
+    AddKeyboardShortcuts();
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js').catch(function() {});
@@ -431,4 +481,8 @@
   window.doqr = doqr;
   window.animate = animate;
   window.statusautorefresh = statusautorefresh;
+  window.StartClock = StartClock;
+  window.AddStatusBadge = AddStatusBadge;
+  window.AddThemeToggle = AddThemeToggle;
+  window.AddKeyboardShortcuts = AddKeyboardShortcuts;
 })();

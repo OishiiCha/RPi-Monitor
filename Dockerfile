@@ -42,7 +42,6 @@ RUN mkdir -p /usr/share/rpimonitor \
     && chmod +x /usr/bin/rpimonitord \
     && ln -sf rpimonitord /usr/bin/rpimonitord-snmp \
     && echo 'daemon.addr=0.0.0.0' >> /etc/rpimonitor/daemon.conf \
-    && echo 'daemon.testmode=1' >> /etc/rpimonitor/daemon.conf \
     && rm -rf /build
 
 VOLUME /etc/rpimonitor
