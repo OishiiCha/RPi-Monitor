@@ -25,8 +25,8 @@ RUN mkdir -p /usr/share/rpimonitor \
     /usr/share/rpimonitor/web \
     /usr/share/rpimonitor/lib \
     && cp -r src/usr/bin/rpimonitord /usr/bin/rpimonitord \
-    && cp -r src/usr/share/rpimonitor/lib /usr/share/rpimonitor/lib \
-    && cp -r src/usr/share/rpimonitor/web /usr/share/rpimonitor/web \
+    && cp -r src/usr/share/rpimonitor/lib/* /usr/share/rpimonitor/lib/ \
+    && cp -r src/usr/share/rpimonitor/web/* /usr/share/rpimonitor/web/ \
     && cp -r src/etc/rpimonitor/* /etc/rpimonitor/ \
     && cp -r src/var/lib/rpimonitor/* /var/lib/rpimonitor/ \
     && cp /build/VERSION /usr/share/rpimonitor/VERSION \
