@@ -1,0 +1,22 @@
+# PerlTidy configuration for RPi-Monitor
+-l=120           # max line length
+-i=2             # indentation level
+-ci=2            # continuation indentation
+-pt=2            # parens tight
+-bt=2            # braces tight
+-sbt=2           # square brackets tight
+-bbt=0           # block braces: no space before
+-nsfs           # no space before semicolon
+-nolq           # don't outdent long quotes
+-wbb="% + - * / x != == >= <= =~ !~ < > | & = **= += *= &= <<= &&= -= /= |= >>= ||= //= .= %= ^= x="
+-lp             # line up parentheses
+-cti=0           # no extra indentation for closing brackets
+-vtc=0           # vertical tightness for containers
+-vt=0            # vertical tightness
+-nsbl           # no space before left brace
+-nolc           # don't outdent labels
+-nofc           # don't force function calls to have no space
+-boc           # break at old comma breaks
+-nssc          # don't add semicolon at every statement start
+# Keep blank lines
+-bls           # blank lines before sub definitions

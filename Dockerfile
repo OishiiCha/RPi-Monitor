@@ -1,0 +1,45 @@
+FROM perl:5.36-slim-bookworm
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    librrds-perl \
+    libipc-sharelite-perl \
+    libhttp-daemon-perl \
+    libhttp-message-perl \
+    libjson-perl \
+    libio-socket-ssl-perl \
+    libmime-base64-perl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+
+COPY cpanfile .
+RUN cpanm --installdeps --notest . && rm -rf /root/.cpanm
+
+COPY src/ /build/src/
+COPY VERSION /build/VERSION
+
+RUN mkdir -p /usr/share/rpimonitor \
+    /etc/rpimonitor \
+    /var/lib/rpimonitor \
+    /usr/bin \
+    /usr/share/rpimonitor/web \
+    /usr/share/rpimonitor/lib \
+    && cp -r src/usr/bin/rpimonitord /usr/bin/rpimonitord \
+    && cp -r src/usr/share/rpimonitor/lib /usr/share/rpimonitor/lib \
+    && cp -r src/usr/share/rpimonitor/web /usr/share/rpimonitor/web \
+    && cp -r src/etc/rpimonitor/* /etc/rpimonitor/ \
+    && cp -r src/var/lib/rpimonitor/* /var/lib/rpimonitor/ \
+    && cp /build/VERSION /usr/share/rpimonitor/VERSION \
+    && chmod +x /usr/bin/rpimonitord \
+    && echo 'daemon.addr=0.0.0.0' >> /etc/rpimonitor/daemon.conf \
+    && echo 'daemon.testmode=1' >> /etc/rpimonitor/daemon.conf \
+    && rm -rf /build
+
+VOLUME /etc/rpimonitor
+VOLUME /var/lib/rpimonitor
+
+EXPOSE 8888
+
+CMD ["perl", "/usr/bin/rpimonitord", "-b", "0.0.0.0"]

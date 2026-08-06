@@ -214,7 +214,7 @@ function AddOption()
           '<p>'+
           '<b>Statistic</b><br>'+
           '<form class="form-inline">'+
-            '<span>Default graph timeline <select class="span3" id="active_rra">'+
+            '<span>Default graph timeline <select class="form-select w-auto d-inline-block" id="active_rra">'+
             '<option value="0" '+ ( active_rra == 0 ? 'selected' : '' ) +'>Graph n°1</option>'+
             '<option value="1" '+ ( active_rra == 1 ? 'selected' : '' ) +'>Graph n°2</option>'+
             '<option value="2" '+ ( active_rra == 2 ? 'selected' : '' ) +'>Graph n°3</option>'+

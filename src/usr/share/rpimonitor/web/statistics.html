@@ -27,6 +27,7 @@
 
     <!-- CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/bootstrap-icons.min.css" rel="stylesheet">
     <link href="./css/rpimonitor.css" rel="stylesheet">
 
     <!-- Favicon-->
@@ -39,11 +40,11 @@
     <div id='topmenu'></div>
 
     <!-- Begin page content -->
-    <div class="alert alert-error hide" id="message"></div>
-    <div class="text-info page-title hide" id="pageTitle"></div>
+    <div class="alert alert-danger d-none" id="message"></div>
+    <div class="text-info page-title d-none" id="pageTitle"></div>
     <div class="container-fluid">
       <i id="insertionPoint"></i>
-      <table id="infotable" border=0>
+      <table id="infotable" class="border-0">
         <tr><td></td></tr>
       </table>
       <div id="preloader" class="text-center"><img src="img/preloader.gif"></div>

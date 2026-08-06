@@ -1,0 +1,23 @@
+# Zone.Identifier (Windows ADS artifacts)
+*Zone.Identifier
+
+# Build artifacts
+docs/build/
+*.deb
+*.tar.gz
+*.tgz
+
+# Editor / IDE
+*~
+*.swp
+*.swo
+.idea/
+.vscode/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+config/template/

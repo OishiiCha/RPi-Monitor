@@ -30,7 +30,21 @@ use IPC::ShareLite;
 $|=1;
 $SIG{CHLD}   = 'IGNORE';
 
-my $VERSION  = "{DEVELOPMENT}";
+my $VERSION = "{DEVELOPMENT}";
+# Try to read version from VERSION file (installed alongside or in source tree)
+{
+  my $version_file;
+  for my $candidate ( "$FindBin::Bin/../../VERSION", "/usr/share/rpimonitor/VERSION", "VERSION" ) {
+    if ( -f $candidate ) {
+      $version_file = $candidate;
+      last;
+    }
+  }
+  if ( $version_file && open my $vh, '<', $version_file ) {
+    chomp( $VERSION = <$vh> );
+    close $vh;
+  }
+}
 our $loglevel  = 0;
 my $pidfile;
 

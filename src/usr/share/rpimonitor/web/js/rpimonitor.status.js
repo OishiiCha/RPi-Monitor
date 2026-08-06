@@ -32,9 +32,15 @@ function RowTemplate(id,image,title){
 
 function ActivatePopover(){
   while((info=postProcessInfo.pop()) != null) {
-    $(info[0]).popover({trigger:'hover',placement:'bottom',html:true, title: info[1], content: info[2] });
+    var el = document.querySelector(info[0]);
+    if (el) {
+      new bootstrap.Popover(el, {trigger:'hover',placement:'bottom',html:true, title: info[1], content: info[2]});
+    }
   }
-  $("#packages").popover();
+  var pkgEl = document.getElementById("packages");
+  if (pkgEl) {
+    new bootstrap.Popover(pkgEl);
+  }
 }
 
 function UpdateStatus () {

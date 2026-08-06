@@ -31,9 +31,65 @@
   padding: 14px 24px;
 }
 
+/* Bootstrap 3 → 5 compatibility */
+.hide { display: none !important; }
+.pull-right { float: right !important; }
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.alert-error {
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+}
+.well {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: .3rem;
+}
+.well-lg {
+  padding: 24px;
+  border-radius: .5rem;
+}
+.btn-large {
+  padding: .5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: .3rem;
+}
+.label {
+  display: inline-block;
+  padding: .25em .4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25rem;
+}
+.label-warning { color: #fff; background-color: #ffc107; }
+.label-danger { color: #fff; background-color: #dc3545; }
+.label-success { color: #fff; background-color: #198754; }
+.label-info { color: #fff; background-color: #0dcaf0; }
+.label-default { color: #fff; background-color: #6c757d; }
+.label-primary { color: #fff; background-color: #0d6efd; }
+.alert-warning { color: #664d03; background-color: #fff3cd; border-color: #ffecb5; }
+
 /* Move content away from navbar */
-body { 
-  padding-top: 50px;
+body {
+  padding-top: 56px;
 }
 
 /* Move rrd graph away from navbar */
@@ -124,7 +180,7 @@ body {
 /* Testing mode banner (non-Raspberry Pi environment) */
 .testmode-banner {
   position: fixed;
-  top: 50px;
+  top: 56px;
   left: 0;
   right: 0;
   z-index: 1030;

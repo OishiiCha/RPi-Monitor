@@ -28,14 +28,20 @@
 - [x] **[P2] Add `.editorconfig`** - Completed: 2026-08-06 - Created `.editorconfig` with UTF-8 charset, LF line endings, 2-space indentation (4 for Perl/PM/T files), tab indentation for Makefile, trailing whitespace trimming.
 - [x] **[P2] Remove commented-out code** - Completed: 2026-08-06 - Removed all `#print Data::Dumper->Dump(...)` debug lines and `#use diagnostics` from `rpimonitord`.
 - [x] **[P1] Split monolithic Perl file** - Completed: 2026-08-06 - Split `rpimonitord` (1717 lines, 6 inline packages) into 5 modules under `src/usr/share/rpimonitor/lib/RPi/Monitor/`: `SafeEval.pm`, `Configuration.pm`, `Server.pm`, `Monitor.pm`, `Interactive.pm`, `SnmpModule.pm`. Main script reduced to ~270 lines. Updated CI workflow to syntax-check all `.pm` files. Updated test to use new module paths.
+- [x] **[P2] Add linter configuration** - Completed: 2026-08-06 - Added `.eslintrc.json` for JavaScript (no-eval, no-undef, curly rules) and `.perltidyrc` for Perl code formatting.
 
 ## Frontend Modernization
 
-*(No items completed yet.)*
+- [x] **[P1] Upgrade jQuery** - Completed: 2026-08-06 - Upgraded from jQuery 1.x to jQuery 3.7.1.
+- [x] **[P1] Upgrade Bootstrap** - Completed: 2026-08-06 - Upgraded from Bootstrap 3.x to Bootstrap 5.3.3. Updated navbar (navbar-dark bg-dark fixed-top, navbar-toggler, nav-item/nav-link), modals (data-bs-dismiss, btn-close, modal-title), dropdowns (data-bs-toggle, dropdown-item, dropdown-divider, dropdown-menu-end), popovers (BS5 Popover API), progress bars (bg-warning/bg-danger), labels (compat CSS). Added BS3→5 compatibility CSS classes. Replaced glyphicon with inline SVG. Updated all HTML pages and JS files.
+- [x] **[P1] Upgrade/replace raphael.js** - Completed: 2026-08-06 - Upgraded from raphael 2.1.0 to 2.3.0.
+- [x] **[P1] Upgrade/replace justgage** - Completed: 2026-08-06 - Upgraded from justgage 1.0.1 to 1.6.1.
+- [x] **[P1] Upgrade Sortable.js** - Completed: 2026-08-06 - Upgraded from Sortable 1.6.1 to 1.15.2.
+- [x] **[P2] Remove deprecated HTML attributes** - Completed: 2026-08-06 - Replaced `border=0` in statistics.html with `class="border-0"`.
 
 ## Architecture
 
-*(No items completed yet.)*
+- [x] **[P2] Add Docker/containerization support** - Completed: 2026-08-06 - Created `Dockerfile` (perl:5.36-slim-bookworm base, installs all deps), `docker-compose.yml` (port 8888, named volume for RRD data, optional config mount), `.dockerignore`, and `config/` directory with default daemon.conf.
 
 ## Testing & CI/CD
 
@@ -57,7 +63,10 @@
 ## Build & Deploy
 
 - [x] **[P1] Improve systemd unit file** - Completed: 2026-08-06 - Added `Wants=network-online.target`, `Restart=on-failure`, `RestartSec=5`, and hardening directives: NoNewPrivileges, ProtectSystem=full, ProtectHome, PrivateTmp, ReadWritePaths, RestrictAddressFamilies, LockPersonality, RestrictRealtime, RestrictSUIDSGID.
+- [x] **[P2] Add Makefile improvements** - Completed: 2026-08-06 - Added `test` (prove), `check` (perl -c syntax), `lint` (JS eval check + syntax), and `dist` (tarball) make targets. VERSION file now installed to `/usr/share/rpimonitor/VERSION`.
 
 ## Miscellaneous
 
 - [x] **[P3] Fix typo in README** - Completed: 2026-08-06 - Fixed "RPi-Monotor" → "RPi-Monitor" in title and "detailled" → "detailed" in installation section. Also updated contributing link to point to new CONTRIBUTING.md.
+- [x] **[P2] Clean up Zone.Identifier files** - Completed: 2026-08-06 - Created `.gitignore` with `*Zone.Identifier` pattern to exclude Windows ADS artifacts.
+- [x] **[P2] Fix version string** - Completed: 2026-08-06 - Replaced hardcoded `$VERSION = "{DEVELOPMENT}"` with runtime VERSION file lookup. Searches `$FindBin::Bin/../../VERSION`, `/usr/share/rpimonitor/VERSION`, and `VERSION`. Makefile and Dockerfile updated to install VERSION file.

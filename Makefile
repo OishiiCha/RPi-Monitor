@@ -38,6 +38,7 @@ install: man
 	@cp -r src/usr/bin/* ${TARGETDIR}usr/bin/
 	@mkdir -p ${TARGETDIR}usr/share/rpimonitor
 	@cp -r src/usr/share/rpimonitor/* ${TARGETDIR}usr/share/rpimonitor/
+	@cp VERSION ${TARGETDIR}usr/share/rpimonitor/VERSION
 	@echo "Startup system is ${STARTUPSYS}"
 	@mkdir -p ${TARGETDIR}usr/share/man/man1
 	@cp -r docs/build/man/rpimonitor.1 ${TARGETDIR}usr/share/man/man1/
@@ -60,3 +61,43 @@ endif
 
 clean:
 	@echo
+
+.PHONY: test
+test:
+	@echo "Running Perl tests..."
+	@prove -l t/
+
+.PHONY: check
+check:
+	@echo "Running Perl syntax checks..."
+	@perl -c src/usr/bin/rpimonitord
+	@for f in src/usr/share/rpimonitor/lib/RPi/Monitor/*.pm; do \
+		echo "Checking $$f..."; \
+		perl -c $$f; \
+	done
+
+.PHONY: lint
+lint: check
+	@echo "Running JavaScript lint checks..."
+	@for f in src/usr/share/rpimonitor/web/js/rpimonitor*.js; do \
+		echo "Linting $$f..."; \
+		node -c $$f 2>/dev/null || echo "  (node not available, skipping)"; \
+	done
+	@echo "Checking for eval() in JavaScript..."
+	@if grep -rn '[^a-zA-Z]eval(' src/usr/share/rpimonitor/web/js/rpimonitor*.js; then \
+		echo "ERROR: eval() found in JavaScript files"; exit 1; \
+	else \
+		echo "  No eval() found."; \
+	fi
+
+.PHONY: dist
+dist: check test
+	@echo "Building distribution tarball..."
+	@mkdir -p dist
+	@tar czf dist/rpimonitor-$(shell cat VERSION).tar.gz \
+		--exclude='*.Zone.Identifier' \
+		--exclude='.git' \
+		--exclude='dist' \
+		src/ VERSION cpanfile Makefile Dockerfile docker-compose.yml \
+		CHANGELOG.md README.md CONTRIBUTING.md LICENSE
+	@echo "Created dist/rpimonitor-$(shell cat VERSION).tar.gz"

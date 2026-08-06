@@ -1,0 +1,26 @@
+{
+  "env": {
+    "browser": true,
+    "jquery": true
+  },
+  "globals": {
+    "bootstrap": "readonly",
+    "JustGage": "readonly",
+    "Sortable": "readonly",
+    "Raphael": "readonly",
+    "safeEval": "readonly",
+    "safeEvalStmt": "readonly",
+    "localStorage": "readonly"
+  },
+  "rules": {
+    "no-undef": "error",
+    "no-unused-vars": "warn",
+    "no-console": "warn",
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "curly": "warn",
+    "eqeqeq": "warn",
+    "no-trailing-spaces": "error",
+    "no-mixed-spaces-and-tabs": "error"
+  }
+}

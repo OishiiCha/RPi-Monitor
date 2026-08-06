@@ -22,9 +22,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed deprecated `<font>` HTML tags from JavaScript
 - Split monolithic `rpimonitord` (1717 lines, 6 inline packages) into 5 modules under `lib/RPi/Monitor/`: `SafeEval.pm`, `Configuration.pm`, `Server.pm`, `Monitor.pm`, `Interactive.pm`, `SnmpModule.pm`
 
+### Frontend Modernization
+- Upgraded jQuery from 1.x to 3.7.1
+- Upgraded Bootstrap from 3.x to 5.3.3 (navbar, modals, dropdowns, popovers, progress bars, labels)
+- Added Bootstrap 3 → 5 compatibility CSS classes (`.hide`, `.pull-right`, `.sr-only`, `.well`, `.label-*`, `.alert-error`)
+- Upgraded Raphael from 2.1.0 to 2.3.0
+- Upgraded JustGage from 1.0.1 to 1.6.1
+- Upgraded Sortable.js from 1.6.1 to 1.15.2
+- Replaced glyphicon icons with inline SVG
+- Updated all HTML pages with Bootstrap 5 markup and `bootstrap-icons.min.css` link
+- Updated `Server.pm` paths list for new library filenames
+- Removed deprecated `border=0` HTML attribute from statistics.html
+
 ### Build & Deploy
 - Hardened systemd unit file with `NoNewPrivileges`, `ProtectSystem`, `ProtectHome`, `PrivateTmp`, `RestrictAddressFamilies`, etc.
 - Added restart policy to systemd unit
+- Added Docker support: `Dockerfile`, `docker-compose.yml`, `.dockerignore`, and `config/` directory
+- Added Makefile targets: `test`, `check`, `lint`, `dist`
+- Fixed version string: reads from VERSION file at runtime instead of hardcoded `{DEVELOPMENT}`
+- Added `.gitignore` with Zone.Identifier exclusion
+- Added linter configuration: `.eslintrc.json` (JavaScript) and `.perltidyrc` (Perl)
+- Modernized README with Docker quick start, configuration reference, and project structure
 
 ### Documentation
 - Created `CONTRIBUTING.md` with development guidelines

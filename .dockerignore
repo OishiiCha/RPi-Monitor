@@ -1,0 +1,12 @@
+.git
+.github
+docs
+*.md
+!CHANGELOG.md
+*.Zone.Identifier
+Zone.Identifier
+t/
+tools/
+.gitmodules
+.gitattributes
+.editorconfig

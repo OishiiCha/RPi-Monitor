@@ -266,11 +266,7 @@ sub Run
 
       "/css/rpimonitor.css",
       "/css/bootstrap.min.css",
-
-      "/fonts/glyphicons-halflings-regular.eot",
-      "/fonts/glyphicons-halflings-regular.ttf",
-      "/fonts/glyphicons-halflings-regular.svg",
-      "/fonts/glyphicons-halflings-regular.woff",
+      "/css/bootstrap-icons.min.css",
 
       "/stat/empty.rrd",
 
@@ -283,8 +279,8 @@ sub Run
       "/js/rpimonitor.index.js",
       "/js/rpimonitor.js",
       "/js/jsqrencode.min.js",
-      "/js/raphael.2.1.0.min.js",
-      "/js/justgage.1.0.1.min.js",
+      "/js/raphael.2.3.0.min.js",
+      "/js/justgage.1.6.1.min.js",
       "/js/jquery.min.js",
       "/js/bootstrap.min.js",
       "/js/flot/jquery.flot.min.js",
@@ -297,7 +293,7 @@ sub Run
       "/js/javascriptrrd/rrdMultiFile.js",
       "/js/javascriptrrd/rrdFile.js",
       "/js/javascriptrrd/rrdFlotSupport.js",
-      "/js/Sortable.1.6.1.min.js"
+      "/js/Sortable.1.15.2.min.js"
     ));
   }
   $this->{'paths'} = \@paths;

@@ -72,12 +72,12 @@ function ShowFriends(){
 
 function AddFooter(){
 $('#footer').html(
-  '<div class="navbar-inverse navbar-fixed-bottom text-center">'+
-    '<small>'+
+  '<div class="navbar navbar-dark bg-dark fixed-bottom text-center">'+
+    '<small class="text-secondary">'+
       '<a href="http://rpi-experiences.blogspot.fr/">RPi-Experiences</a>'+
-      '<font color="silver"> | </font>'+
+      ' <span class="text-secondary">|</span> '+
       '<a href="https://github.com/XavierBerger/RPi-Monitor">GitHub</a>'+
-      '<font color="silver"> | </font>'+
+      ' <span class="text-secondary">|</span> '+
       '<a href="http://www.raspberrypi.org/">Raspberry Pi Foundation</a>'+
     '</small>'+
   '</div>'
@@ -93,14 +93,14 @@ function AddDialogs(){
       '<div class="modal-dialog">' +
         '<div class="modal-content">'+
       '<div class="modal-header">'+
-      '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-      '<h4 id="myModalLabel">Options</h4>'+
+      '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+      '<h4 id="myModalLabel" class="modal-title">Options</h4>'+
       '</div>'+
       '<div class="modal-body">'+
          '<i id="optionsInsertionPoint"></i>'+
       '</div>'+
       '<div class="modal-footer">'+
-      '<button class="btn" data-dismiss="modal" aria-hidden="true" id="closeoptions">Close</button>'+
+      '<button class="btn btn-secondary" data-bs-dismiss="modal" id="closeoptions">Close</button>'+
       '</div>'+
       '</div>'+
     '</div>'+
@@ -112,8 +112,8 @@ function AddDialogs(){
       '<div class="modal-dialog">' +
         '<div class="modal-content">'+
       '<div class="modal-header">'+
-      '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-      '<h4 id="myModalLabel">License</h4>'+
+      '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+      '<h4 id="myModalLabel" class="modal-title">License</h4>'+
       '</div>'+
       '<div class="modal-body">'+
       'This program is free software: you can redistribute it and/or modify '+
@@ -131,10 +131,10 @@ function AddDialogs(){
       '</p>'+
       '<hr>'+
       '<b>RPi-Monitor</b> is using third party software that have their own licenses. '+
-      'Refer to <a href="#About" data-dismiss="modal" data-toggle="modal">About</a> to view the list of software used by <b>RPi-Monitor</b>. '+
+      'Refer to <a href="#About" data-bs-dismiss="modal" data-bs-toggle="modal">About</a> to view the list of software used by <b>RPi-Monitor</b>. '+
       '</div>'+
       '<div class="modal-footer">'+
-      '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
+      '<button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'+
       '</div>'+
       '</div>'+
     '</div>'+
@@ -146,8 +146,8 @@ function AddDialogs(){
       '<div class="modal-dialog">' +
         '<div class="modal-content">'+
       '<div class="modal-header">'+
-      '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-      '<h4 id="myModalLabel">About</h4>'+
+      '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+      '<h4 id="myModalLabel" class="modal-title">About</h4>'+
       '</div>'+
       '<div class="modal-body">'+
       '<p><b>Version</b>: {DEVELOPMENT} '+
@@ -159,11 +159,11 @@ function AddDialogs(){
       '<a href="https://xavierberger.github.io/RPi-Monitor-docs/index.html">Documentation</a>'+
       '<hr>'+
       '<p><b>RPi-Monitor</b> is free software developed on top of other open source '+
-        'tools: <a href="http://twitter.github.io/bootstrap/">bootstrap</a>, <a href="http://jquery.com/">jquery</a>, <a href="https://code.google.com/p/jsqrencode/">jsqrencode</a>, <a href="http://javascriptrrd.sourceforge.net/">javascriptrrd</a> and <a href="http://www.flotcharts.org/">Flot</a>.<br>'+
+        'tools: <a href="https://getbootstrap.com/">bootstrap</a>, <a href="https://jquery.com/">jquery</a>, <a href="https://github.com/zpao/qrcode">jsqrencode</a>, <a href="https://github.com/manuelluis/javascriptrrd">javascriptrrd</a> and <a href="https://www.flotcharts.org/">Flot</a>.<br>'+
       '<p><b>Raspberry Pi</b> and the Raspberry Pi logo are properties of <a href="http://www.raspberrypi.org/">Raspberry Pi Foundation</a>.</p>'+
       '</div>'+
       '<div class="modal-footer">'+
-      '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
+      '<button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'+
       '</div>'+
       '</div>'+
     '</div>'+
@@ -194,43 +194,40 @@ function AddTopmenu(){
     var menutitle=page.menutitle;
   }
   topmenu=
-    '<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">' +
+    '<nav class="navbar navbar-dark bg-dark fixed-top" data-bs-theme="dark">' +
     '<div class="container-fluid">' +
     '<div class="navbar-header">' +
-      '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">' +
-      '<span class="sr-only">Toggle navigation</span>' +
-      '<span class="icon-bar"></span>' +
-      '<span class="icon-bar"></span>' +
-      '<span class="icon-bar"></span>' +
+      '<button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1">' +
+      '<span class="navbar-toggler-icon"></span>' +
       '</button>' +
       '<a class="navbar-brand" href="index.html"><img height="20" src="'+icon+'"> &nbsp;'+menutitle+'</a>' +
     '</div>' +
     '<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">' +
-      '<ul class="nav navbar-nav">' +
-        '<li id="statusmenu"><a id="statuslink" href="status.html">Status</a></li>'+
-            '<li id="statisticsmenu"><a id="statisticslink" href="statistics.html">Statistics</a></li>'+
-            '<li id="addonsmenu" class="hide"><a id="addonslink" href="addons.html">Add-ons</a></li>'+
-            '<li id="optionsmenu"><a href="#Options" data-toggle="modal">Options</a></li>'+
-            '<li class="dropdown">' +
-        '<a href="#" class="dropdown-toggle" data-toggle="dropdown">About <span class="caret"></span></a>' +
-        '<ul class="dropdown-menu" role="menu">' +
-        '<li class="dropdown-header"> <b>RPi-Monitor</b></li>'+
-        '<li><a href="#" title="Scan this qrcode to reach this page from your smartphone or tablet"><canvas id="qrcanv"><a></li>'+
-        '<li><a href="#License" data-toggle="modal">License</a></li>'+
-        '<li><a href="#About" data-toggle="modal">About</a></li>'+
-        '<li class="divider"></li>'+
-        '<li class="dropdown-header"> <b>Related links</b></li>'+
-        '<li><a href="https://xavierberger.github.io/RPi-Monitor-docs/index.html" data-toggle="modal">Documentation</a></li>'+
-        '<li><a href="http://rpi-experiences.blogspot.fr/">RPi-Experiences</a></li>'+
-        '<li><a href="https://github.com/XavierBerger/RPi-Monitor">RPi-Monitor on GitHub</a></li>'+
+      '<ul class="navbar-nav">' +
+        '<li id="statusmenu" class="nav-item"><a id="statuslink" class="nav-link" href="status.html">Status</a></li>'+
+            '<li id="statisticsmenu" class="nav-item"><a id="statisticslink" class="nav-link" href="statistics.html">Statistics</a></li>'+
+            '<li id="addonsmenu" class="nav-item hide"><a id="addonslink" class="nav-link" href="addons.html">Add-ons</a></li>'+
+            '<li id="optionsmenu" class="nav-item"><a class="nav-link" href="#Options" data-bs-toggle="modal">Options</a></li>'+
+            '<li class="nav-item dropdown">' +
+        '<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">About</a>' +
+        '<ul class="dropdown-menu">' +
+        '<li><h6 class="dropdown-header">RPi-Monitor</h6></li>'+
+        '<li><a class="dropdown-item" href="#" title="Scan this qrcode to reach this page from your smartphone or tablet"><canvas id="qrcanv"></canvas></a></li>'+
+        '<li><a class="dropdown-item" href="#License" data-bs-toggle="modal">License</a></li>'+
+        '<li><a class="dropdown-item" href="#About" data-bs-toggle="modal">About</a></li>'+
+        '<li><hr class="dropdown-divider"></li>'+
+        '<li><h6 class="dropdown-header">Related links</h6></li>'+
+        '<li><a class="dropdown-item" href="https://xavierberger.github.io/RPi-Monitor-docs/index.html">Documentation</a></li>'+
+        '<li><a class="dropdown-item" href="http://rpi-experiences.blogspot.fr/">RPi-Experiences</a></li>'+
+        '<li><a class="dropdown-item" href="https://github.com/XavierBerger/RPi-Monitor">RPi-Monitor on GitHub</a></li>'+
         '</ul>' +
       '</li>' +
       '</ul>' +
-      '<div class="pull-right hide" id="divfriends">'+
-        '<ul class="nav navbar-nav">'+
-        '<li class="dropdown">'+
-          '<a href="#" class="dropdown-toggle" data-toggle="dropdown">Friends <b class="caret"></b></a>'+
-          '<ul class="dropdown-menu dropdown-menu-right" id="friends">'+
+      '<div class="float-end hide" id="divfriends">'+
+        '<ul class="navbar-nav">'+
+        '<li class="nav-item dropdown">'+
+          '<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Friends</a>'+
+          '<ul class="dropdown-menu dropdown-menu-end" id="friends">'+
           '</ul>'+
         '</li>'+
         '</ul>'+
@@ -281,10 +278,10 @@ function UpdateMenu(){
       dropDownMenu+='<li><a href="status.html?activePage='+iloop+'">'+safeEval(data.status[iloop], {data: getData('static')})+'</a></li>';
     }
     dropDownMenu+='</ul>';
-    $('#statuslink').html( 'Status <b class="caret"></b>')
+    $('#statuslink').html( 'Status <span class="caret"></span>')
     $(dropDownMenu).insertAfter('#statuslink');
     $('#statuslink').addClass('dropdown-toggle');
-    $('#statuslink').attr('data-toggle','dropdown');
+    $('#statuslink').attr('data-bs-toggle','dropdown');
     $('#statuslink').attr('href','#');
   }
   }
@@ -300,10 +297,10 @@ function UpdateMenu(){
       dropDownMenu+='<li><a href="statistics.html?activePage='+iloop+'">'+safeEval(data.statistics[iloop], {data: getData('static')})+'</a></li>';
     }
     dropDownMenu+='</ul>';
-    $('#statisticslink').html( 'Statistics <b class="caret"></b>')
+    $('#statisticslink').html( 'Statistics <span class="caret"></span>')
     $(dropDownMenu).insertAfter('#statisticslink');
     $('#statisticslink').addClass('dropdown-toggle');
-    $('#statisticslink').attr('data-toggle','dropdown');
+    $('#statisticslink').attr('data-bs-toggle','dropdown');
     $('#statisticslink').attr('href','#');
     }
   }
@@ -320,10 +317,10 @@ function UpdateMenu(){
         dropDownMenu+='<li><a href="addons.html?activePage='+iloop+'">'+safeEval(data.addons[iloop], {data: getData('static')})+'</a></li>';
       }
       dropDownMenu+='</ul>';
-      $('#addonslink').html( 'Add-ons <b class="caret"></b>')
+      $('#addonslink').html( 'Add-ons <span class="caret"></span>')
       $(dropDownMenu).insertAfter('#addonslink');
       $('#addonslink').addClass('dropdown-toggle');
-      $('#addonslink').attr('data-toggle','dropdown');
+      $('#addonslink').attr('data-bs-toggle','dropdown');
       $('#addonslink').attr('href','#');
     }
   }
