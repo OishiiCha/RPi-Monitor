@@ -25,7 +25,7 @@ use RPi::Monitor::Configuration;
 use RPi::Monitor::Server;
 use RPi::Monitor::Monitor;
 use RPi::Monitor::Interactive;
-use RPi::Monitor::SnmpModule;
+eval { require RPi::Monitor::SnmpModule; };
 $|=1;
 $SIG{CHLD}   = 'IGNORE';
 
@@ -223,6 +223,8 @@ if ( ! $pidfile ) {
 $configuration->Load();
 
 if ($configuration->{'getmib'}) {
+  defined &RPi::Monitor::SnmpModule::new
+    or die "SNMP support not available (SNMP::Extension::PassPersist not installed)\n";
   my $snmpmodule = RPi::Monitor::SnmpModule->new();
   $snmpmodule->GetMib($configuration);
   exit;
@@ -237,6 +239,8 @@ $monitor->DetectPlatform($configuration);
 
 # snmp agent 
 if ( basename($0) =~ /rpimonitord-snmp/ ) {
+  defined &RPi::Monitor::SnmpModule::new
+    or die "SNMP support not available (SNMP::Extension::PassPersist not installed)\n";
   my $snmpmodule = RPi::Monitor::SnmpModule->new();
   $snmpmodule->Run($configuration,$monitor->{'static'});
   exit;

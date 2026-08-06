@@ -1,12 +1,16 @@
 package RPi::Monitor::SnmpModule;
 use strict;
 use warnings;
-use SNMP::Extension::PassPersist;
 use Scalar::Util qw(looks_like_number);
 use POSIX;
 use JSON;
 use Data::Dumper;
 use RPi::Monitor::SafeEval;
+
+# Optional dependency - loaded at runtime
+BEGIN {
+  eval { require SNMP::Extension::PassPersist; };
+}
 
 sub new
 {
@@ -123,6 +127,9 @@ sub Run
     my $this = shift;
     my $configuration = shift;
     my $static = shift;
+
+    $SNMP::Extension::PassPersist::VERSION
+      or die "SNMP::Extension::PassPersist not installed\n";
 
     my $extsnmp = SNMP::Extension::PassPersist->new(
         backend_collect => \&UpdateTree,
