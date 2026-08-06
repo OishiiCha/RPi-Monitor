@@ -1,16 +1,12 @@
 requires 'perl', '5.10.1';
 requires 'Mojolicious';
-requires 'JSON';
-requires 'RRDs';
-requires 'Scalar::Util';
-requires 'File::Which';
-requires 'POSIX';
-requires 'Cwd';
-requires 'Data::Dumper';
-requires 'Sys::Hostname';
-requires 'File::Basename';
-requires 'MIME::Base64';
 requires 'YAML::XS';
+
+# Note: RRDs is provided by librrds-perl (system package), not CPAN
+# Note: JSON is provided by libjson-perl (system package)
+# Note: File::Which is provided by libfile-which-perl (system package)
+# Note: POSIX, Cwd, Data::Dumper, Sys::Hostname, File::Basename,
+#       Scalar::Util, MIME::Base64 are Perl core modules
 
 # Optional dependencies for SSL/TLS support
 recommends 'IO::Socket::SSL';

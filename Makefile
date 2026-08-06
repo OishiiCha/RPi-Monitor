@@ -118,7 +118,7 @@ deb: man
 	@cp docs/build/man/rpimonitor.1 dist/rpimonitor-deb/usr/share/man/man1/
 	@cp docs/build/man/rpimonitor-*.conf.5 dist/rpimonitor-deb/usr/share/man/man5/
 	@chmod +x dist/rpimonitor-deb/usr/bin/rpimonitord
-	@printf "Package: rpimonitor\nVersion: $(shell cat VERSION)\nSection: utils\nPriority: optional\nArchitecture: all\nDepends: perl, librrds-perl, libjson-perl, libmojolicious-perl, libyaml-libyaml-perl\nMaintainer: RPi-Monitor\nDescription: Real-time monitoring for embedded devices\n RPi-Monitor is a web-based monitoring tool originally built for\n Raspberry Pi. It collects system metrics and displays them through\n a web interface with gauges, progress bars, and RRD graphs.\n" > dist/rpimonitor-deb/DEBIAN/control
+	@printf "Package: rpimonitor\nVersion: $(shell cat VERSION)\nSection: utils\nPriority: optional\nArchitecture: all\nDepends: perl, librrds-perl, libjson-perl, libmojolicious-perl, libyaml-libyaml-perl, libfile-which-perl\nMaintainer: RPi-Monitor\nDescription: Real-time monitoring for embedded devices\n RPi-Monitor is a web-based monitoring tool originally built for\n Raspberry Pi. It collects system metrics and displays them through\n a web interface with gauges, progress bars, and RRD graphs.\n" > dist/rpimonitor-deb/DEBIAN/control
 	@dpkg-deb --build dist/rpimonitor-deb dist/rpimonitor_$(shell cat VERSION)_all.deb
 	@rm -rf dist/rpimonitor-deb
 	@echo "Created dist/rpimonitor_$(shell cat VERSION)_all.deb"

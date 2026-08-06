@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libjson-perl \
     libio-socket-ssl-perl \
     libyaml-libyaml-perl \
+    libfile-which-perl \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
