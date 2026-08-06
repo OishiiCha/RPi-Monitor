@@ -3,12 +3,9 @@ FROM perl:5.36-slim-bookworm
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     librrds-perl \
-    libipc-sharelite-perl \
-    libhttp-daemon-perl \
-    libhttp-message-perl \
     libjson-perl \
     libio-socket-ssl-perl \
-    libmime-base64-perl \
+    libyaml-libyaml-perl \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 

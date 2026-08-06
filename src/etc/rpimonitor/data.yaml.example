@@ -1,0 +1,25 @@
+# Data configuration (YAML format)
+# This is the YAML equivalent of data.conf + template/raspbian.conf
+# To use: reference this file from data.conf or replace data.conf entirely.
+
+# Include template configs (same as include= in .conf format)
+include:
+  - /etc/rpimonitor/template/addons.conf
+  - /etc/rpimonitor/template/version.conf
+  - /etc/rpimonitor/template/uptime.conf
+  - /etc/rpimonitor/template/cpu.conf
+  - /etc/rpimonitor/template/temperature.conf
+  - /etc/rpimonitor/template/memory.conf
+  - /etc/rpimonitor/template/swap.conf
+  - /etc/rpimonitor/template/sdcard.conf
+  - /etc/rpimonitor/template/network.conf
+
+# Uncomment to add optional templates:
+  # - /etc/rpimonitor/template/printer.conf
+  # - /etc/rpimonitor/template/storage.conf
+  # - /etc/rpimonitor/template/services.conf
+  # - /etc/rpimonitor/template/chrony.conf
+  # - /etc/rpimonitor/template/wlan.conf
+  # - /etc/rpimonitor/template/dht11.conf
+  # - /etc/rpimonitor/template/entropy.conf
+  # - /etc/rpimonitor/template/weather.conf

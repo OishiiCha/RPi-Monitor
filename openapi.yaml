@@ -147,6 +147,65 @@ paths:
                   pagetitle:
                     type: string
 
+  /stat/{name}.json:
+    get:
+      summary: Get RRD time-series data as JSON
+      description: Returns time-series data from an RRD file as JSON, replacing the legacy binary RRD + javascriptrrd frontend stack.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9_-]+$'
+          description: RRD file name (without extension)
+      responses:
+        '200':
+          description: Time-series data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  series:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        data:
+                          type: array
+                          items:
+                            type: array
+                            items:
+                              oneOf:
+                                - type: number
+                                - type: null
+                            minItems: 2
+                            maxItems: 2
+
+  /stat/{name}.rrd:
+    get:
+      summary: Get raw RRD file (legacy)
+      description: Returns the binary RRD file for backward compatibility.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9_-]+$'
+          description: RRD file name (without extension)
+      responses:
+        '200':
+          description: Binary RRD file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
 components:
   securitySchemes:
     BasicAuth:

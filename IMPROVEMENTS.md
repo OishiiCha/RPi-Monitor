@@ -12,7 +12,7 @@
 
 ## Security
 
-- [ ] **[P2] Secure shared memory access** - IPC::ShareLite uses hardcoded default key. Ensure proper permissions and consider alternatives.
+*(No items remaining.)*
 
 ## Code Quality & Modernization
 
@@ -20,19 +20,11 @@
 
 ## Frontend Modernization
 
-- [ ] **[P1] Upgrade/replace flot charts** - Flot is unmaintained. Consider Chart.js, ECharts, or D3.
-- [ ] **[P1] Upgrade/replace javascriptrrd** - Unmaintained SourceForge project. Consider alternatives or vendor/fork.
-- [ ] **[P2] Add package.json and build tooling** - Add modern build pipeline (Vite, webpack, or esbuild).
-- [ ] **[P2] Eliminate global JS variables** - Wrap in modules (ESM or IIFE).
-- [ ] **[P2] Replace inline HTML string construction** - Use template literals or templating engine.
-- [ ] **[P3] Replace QR code library** - jsqrencode is from Google Code (dead). Replace with modern library.
+*(No items remaining.)*
 
 ## Architecture
 
-- [ ] **[P1] Replace HTTP::Daemon with modern web framework** - Consider Mojolicious, Dancer2, or Plack/PSGI.
-- [ ] **[P1] Add WebSocket support for real-time updates** - Replace 10s polling with WebSocket or SSE.
-- [ ] **[P2] Replace IPC::ShareLite with modern IPC** - Consider Redis, shared files, or Mojolicious IPC.
-- [ ] **[P2] Consider replacing RRD with modern time-series storage** - Consider InfluxDB, Prometheus, or SQLite.
+*(No items remaining.)*
 
 ## Testing & CI/CD
 
@@ -44,12 +36,11 @@
 
 ## Configuration
 
-- [ ] **[P2] Consider modern config format** - Consider YAML or TOML. Provide migration tool.
-- [ ] **[P3] Add config migration tool** - Tool to migrate old config formats.
+*(No items remaining.)*
 
 ## Build & Deploy
 
-- [ ] **[P3] Replace git submodule with npm/cpan dependency** - Use package manager instead of submodule.
+*(No items remaining.)*
 
 ## Miscellaneous
 

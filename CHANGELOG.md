@@ -42,6 +42,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added responsive design breakpoints (768px, 480px) for mobile/tablet layouts
 - Added ARIA roles and labels to all HTML pages for accessibility
 - Added PWA support: `manifest.json`, service worker (`sw.js`), offline caching, theme-color meta
+- Replaced Flot charts with Chart.js 4.x (time-scale x-axis via chartjs-adapter-date-fns)
+- Replaced javascriptrrd with server-side RRD extraction (`/stat/:name.json` endpoint using `RRDs::fetch`)
+- Replaced jsqrencode (dead Google Code project) with qrcodejs; added `setupqr()`/`doqr()` to `rpimonitor.js`
+- Added Vite 5.x build tooling (`vite.config.js`, `npm run build`/`npm run dev`)
+- Wrapped all page JS modules in IIFEs with `'use strict'` (utils, status, statistics, addons, index, rpimonitor.js)
+- Converted all inline HTML string concatenation to ES6 template literals
+- Deleted legacy vendored JS files: `flot/`, `javascriptrrd/`, `jsqrencode.min.js`, old `Sortable.1.6.1`, `raphael.2.1.0`, `justgage.1.0.1`, non-minified `bootstrap.js`
+- Fixed `getData()` bug: `name.json` (string property access) → `name + '.json'` (concatenation) in error message
+- Updated About dialog: replaced references to jsqrencode/javascriptrrd/Flot with Chart.js/qrcodejs
+- Updated docker-compose: external port 3080, removed obsolete `shm_size` (IPC::ShareLite removed)
 
 ### Build & Deploy
 - Hardened systemd unit file with `NoNewPrivileges`, `ProtectSystem`, `ProtectHome`, `PrivateTmp`, `RestrictAddressFamilies`, etc.
@@ -53,7 +63,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added linter configuration: `.eslintrc.json` (JavaScript) and `.perltidyrc` (Perl)
 - Added `package.json` pinning JS dependency versions (jQuery, Bootstrap, Raphael, JustGage, Sortable.js, bootstrap-icons)
 - Added `make deb` target for building .deb packages with `dpkg-deb`
-### Configuration
+- Added YAML config support: `LoadYAML()` in `Configuration.pm` using `YAML::XS`, auto-detects `.yaml`/`.yml` files
+- Added config migration tool: `tools/conf2yaml.pl` (installed as `rpimonitor-conf2yaml`) converts legacy `.conf` to YAML
+- Added sample YAML configs: `daemon.yaml.example`, `data.yaml.example`, `cpu.yaml.example`
+- Added `npm run vendor` script and `scripts/vendor-deps.js` to copy JS libs from `node_modules` to webroot
+- Replaced vendored JS libraries (flot, javascriptrrd, jsqrencode) with npm-managed dependencies; no git submodules remain
+### Architecture
+- Replaced HTTP::Daemon with Mojolicious web framework in Server.pm
+- Added WebSocket endpoint (`/ws`) for real-time dynamic data push
+- Added `rpimonitorSubscribe()` in frontend JS with HTTP polling fallback
+- Replaced IPC::ShareLite shared memory with file-based IPC (`dynamic.json`)
+- Removed `sharedmemkey` configuration option
+- RRD retained as primary storage with file-based IPC abstraction layer
 - Added config validation: `Validate()` method in `Configuration.pm` checks port, delay, timeout, SSL, auth, webroot, and RRD entries
 - Marked raspbmc and xbian templates as deprecated (discontinued distros)
 - Removed sysVinit and upstart support from Makefile (systemd is now default)

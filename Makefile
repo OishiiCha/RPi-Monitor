@@ -35,6 +35,7 @@ install: man
 	@mkdir -p ${TARGETDIR}usr/bin
 	@cp src/usr/bin/rpimonitord ${TARGETDIR}usr/bin/
 	@ln -sf rpimonitord ${TARGETDIR}usr/bin/rpimonitord-snmp
+	@cp tools/conf2yaml.pl ${TARGETDIR}usr/bin/rpimonitor-conf2yaml
 	@mkdir -p ${TARGETDIR}usr/share/rpimonitor
 	@cp -r src/usr/share/rpimonitor/* ${TARGETDIR}usr/share/rpimonitor/
 	@cp VERSION ${TARGETDIR}usr/share/rpimonitor/VERSION
@@ -90,7 +91,7 @@ dist: check test
 		--exclude='.git' \
 		--exclude='dist' \
 		src/ VERSION cpanfile Makefile Dockerfile docker-compose.yml \
-		CHANGELOG.md README.md CONTRIBUTING.md LICENSE openapi.yaml package.json
+		CHANGELOG.md README.md CONTRIBUTING.md LICENSE openapi.yaml package.json vite.config.js
 	@echo "Created dist/rpimonitor-$(shell cat VERSION).tar.gz"
 
 .PHONY: deb
@@ -117,7 +118,7 @@ deb: man
 	@cp docs/build/man/rpimonitor.1 dist/rpimonitor-deb/usr/share/man/man1/
 	@cp docs/build/man/rpimonitor-*.conf.5 dist/rpimonitor-deb/usr/share/man/man5/
 	@chmod +x dist/rpimonitor-deb/usr/bin/rpimonitord
-	@printf "Package: rpimonitor\nVersion: $(shell cat VERSION)\nSection: utils\nPriority: optional\nArchitecture: all\nDepends: perl, librrds-perl, libipc-sharelite-perl, libhttp-daemon-perl, libhttp-message-perl, libjson-perl\nMaintainer: RPi-Monitor\nDescription: Real-time monitoring for embedded devices\n RPi-Monitor is a web-based monitoring tool originally built for\n Raspberry Pi. It collects system metrics and displays them through\n a web interface with gauges, progress bars, and RRD graphs.\n" > dist/rpimonitor-deb/DEBIAN/control
+	@printf "Package: rpimonitor\nVersion: $(shell cat VERSION)\nSection: utils\nPriority: optional\nArchitecture: all\nDepends: perl, librrds-perl, libjson-perl, libmojolicious-perl, libyaml-libyaml-perl\nMaintainer: RPi-Monitor\nDescription: Real-time monitoring for embedded devices\n RPi-Monitor is a web-based monitoring tool originally built for\n Raspberry Pi. It collects system metrics and displays them through\n a web interface with gauges, progress bars, and RRD graphs.\n" > dist/rpimonitor-deb/DEBIAN/control
 	@dpkg-deb --build dist/rpimonitor-deb dist/rpimonitor_$(shell cat VERSION)_all.deb
 	@rm -rf dist/rpimonitor-deb
 	@echo "Created dist/rpimonitor_$(shell cat VERSION)_all.deb"

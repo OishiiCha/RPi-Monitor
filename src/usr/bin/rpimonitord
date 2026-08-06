@@ -26,7 +26,6 @@ use RPi::Monitor::Server;
 use RPi::Monitor::Monitor;
 use RPi::Monitor::Interactive;
 use RPi::Monitor::SnmpModule;
-use IPC::ShareLite;
 $|=1;
 $SIG{CHLD}   = 'IGNORE';
 

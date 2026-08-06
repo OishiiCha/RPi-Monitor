@@ -284,8 +284,14 @@ sub Status
 
   $this->Debug(4,"\n$json");
 
-  # write current status (JSON) in shared memory
-  $configuration->{'sharedmem'}->store( $json );
+  # Write current status (JSON) to file for file-based IPC
+  my $ipc_file = "$configuration->{'daemon'}->{'datastore'}/dynamic.json";
+  open(my $ipc_fh, '>', $ipc_file) or do {
+    $this->Debug(1, "Cannot write to $ipc_file: $!");
+    return;
+  };
+  print $ipc_fh $json;
+  close($ipc_fh);
 
   # If embeded server is not used and not readonly, write the json file on disk
   if ( ( $configuration->{'daemon'}->{'noserver'} ) 

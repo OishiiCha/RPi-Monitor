@@ -14,9 +14,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-$(function () {
-  ShowFriends();
-  /* Add qrcode shortcut*/
-  setupqr();
-  doqr(document.URL);
-});
+
+/**
+ * Index page module.
+ * @module rpimonitor.index
+ */
+(function() {
+  'use strict';
+
+  $(function () {
+    ShowFriends();
+    setupqr();
+    doqr(document.URL);
+  });
+})();

@@ -1,0 +1,96 @@
+# CPU monitoring configuration (YAML format)
+# This is the YAML equivalent of template/cpu.conf
+# It demonstrates the YAML structure for dynamic/static/web config sections.
+
+# Dynamic data sources
+dynamic:
+  - name: cpu_frequency
+    source: /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+    regexp: "(.*)"
+    postprocess: "$1/1000"
+    rrd: ""
+
+  - name: cpu_voltage
+    source: /opt/vc/bin/vcgencmd measure_volts core
+    regexp: "(\\d+.\\d+)V"
+    postprocess: ""
+    rrd: ""
+
+  - name: load1,load5,load15
+    source: /proc/loadavg
+    regexp: "^(\\S+)\\s(\\S+)\\s(\\S+)"
+    postprocess: ""
+    rrd: GAUGE
+
+  - name: scaling_governor
+    source: /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    regexp: "(.*)"
+    postprocess: ""
+    rrd: ""
+
+# Static data sources
+static:
+  - name: max_proc
+    source: nproc
+    regexp: "(.*)"
+    postprocess: "$1 + 1"
+
+# SNMP definitions
+snmp:
+  cpu_frequency:
+    id: 7
+    type: integer
+    description: cpu_frequency
+    postprocess: ""
+  cpu_voltage:
+    id: 8
+    type: integer
+    description: cpu_voltage
+    postprocess: "$1*100"
+  load1:
+    id: 9
+    type: integer
+    description: load1
+    postprocess: "$1*100"
+  load5:
+    id: 10
+    type: integer
+    description: load5
+    postprocess: "$1*100"
+  load15:
+    id: 11
+    type: integer
+    description: load15
+    postprocess: "$1*100"
+  scaling_governor:
+    id: 12
+    type: string
+    description: scaling_governor
+    postprocess: ""
+
+# Web status display
+web:
+  status:
+    - content:
+        - title: '"CPU"'
+          icon: cpu.png
+          line:
+            - 'JustGageBar("Load", "1min", 0, data.load1, data.max_proc, 100, 80)+" "+JustGageBar("Load", "5min", 0, data.load5, data.max_proc, 100, 80)+" "+JustGageBar("Load", "15min", 0, data.load15, data.max_proc, 100, 80)'
+            - '"CPU frequency: <b>" + data.cpu_frequency + "MHz</b> Voltage: <b>" + data.cpu_voltage + "V</b>"'
+            - '"Scaling governor: <b>" + data.scaling_governor + "</b>"'
+
+# Web statistics (graphs)
+  statistics:
+    - content:
+        - title: '"CPU Loads"'
+          graph:
+            - load1
+            - load5
+            - load15
+          ds_graph_options:
+            load1:
+              label: Load 1min
+            load5:
+              label: Load 5min
+            load15:
+              label: Load 15min

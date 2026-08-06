@@ -4,15 +4,13 @@ services:
     container_name: rpimonitor
     restart: unless-stopped
     ports:
-      - "8888:8888"
+      - "3080:8888"
     volumes:
       # Persist RRD data and state across container restarts
       - rpimonitor-data:/var/lib/rpimonitor
       # Uncomment to override config files (daemon.conf, data.conf, templates/)
       # Create ./config/ and copy from src/etc/rpimonitor/ before enabling:
       # - ./config:/etc/rpimonitor
-    # Shared memory for IPC::ShareLite
-    shm_size: 64m
     healthcheck:
       test: ["CMD", "perl", "-e", "use IO::Socket::INET; my $s = IO::Socket::INET->new(PeerAddr=>'127.0.0.1',PeerPort=>8888,Timeout=>2) or die; close $s;"]
       interval: 30s

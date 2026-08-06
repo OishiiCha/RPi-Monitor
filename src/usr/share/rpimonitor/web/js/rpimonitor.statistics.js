@@ -14,243 +14,235 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-var activestat;
-var graphconf;
-var activePage;
-var static;
-var active_rra;
 
-function Start() {
-  static = getData('static')
-  graphconf = getData('statistics')
-    
-  activestat = GetURLParameter('graph');
-  if (activestat == null){
-    activestat = localStorage.getItem('activestat') || 0;
-  }
-  activePage = GetURLParameter('activePage');
-  if (activePage == null){ 
-    activePage = 0; 
-  }
-  if ( ( typeof activePage == 'undefined' ) || 
-       ( activePage >= graphconf.length ) 
-     )
-  { 
-    activePage = 0 
-  }
-  if ( graphconf.length > 1 ) {
-    $('#pageTitle').html("<h2>" + safeEval(graphconf[activePage].title, {data: static, static: static}) + "</h2><hr>" );
-    $('#pageTitle').removeClass('hide');
-  }
+/**
+ * Statistics page module using Chart.js.
+ * Replaces flot charts and javascriptrrd with modern Chart.js rendering.
+ * Fetches RRD data as JSON from /stat/:name.json endpoint.
+ * @module rpimonitor.statistics
+ */
+(function() {
+  'use strict';
 
-  FetchGraph();
-}
+  var activestat = 0;
+  var graphconf = null;
+  var activePage = 0;
+  var staticData = null;
+  var active_rra = 0;
+  var chartInstance = null;
+  var rraLabels = ['Graph n°1', 'Graph n°2', 'Graph n°3', 'Graph n°4', 'Graph n°5'];
 
-function SetGraphlist() {
-  var graphlist = "Graph: <select id='selected_graph'>\n";
-  for (var iloop = 0; iloop < graphconf[activePage].content.length; iloop++) {
-    graphlist += "<option value='" + iloop + "'";
-    if (activestat == iloop) {
-      graphlist += " selected ";
+  /**
+   * Initialize the statistics page.
+   * @returns {void}
+   */
+  function Start() {
+    staticData = getData('static');
+    graphconf = getData('statistics');
+
+    activestat = GetURLParameter('graph');
+    if (activestat == null) {
+      activestat = parseInt(localStorage.getItem('activestat')) || 0;
     }
-    graphlist += ">" + safeEval(graphconf[activePage].content[iloop].title, {data: static, static: static}) + "</option>\n";
-  }
-  graphlist += "</select>\n";
+    activePage = GetURLParameter('activePage');
+    if (activePage == null) {
+      activePage = 0;
+    }
+    if (typeof activePage === 'undefined' || activePage >= graphconf.length) {
+      activePage = 0;
+    }
+    if (graphconf.length > 1) {
+      $('#pageTitle').html(`<h2>${safeEval(graphconf[activePage].title, {data: staticData, static: staticData})}</h2><hr>`);
+      $('#pageTitle').removeClass('hide');
+    }
 
-  $("#mygraph_res_title").html(graphlist);
-  
-  $('#selected_graph').on('change', function (e) {
-    activestat = this.value;
-    localStorage.setItem('activestat', activestat);
     FetchGraph();
+  }
+
+  /**
+   * Populate the graph selector dropdown.
+   * @returns {void}
+   */
+  function SetGraphlist() {
+    var options = graphconf[activePage].content.map(function(item, i) {
+      var title = safeEval(item.title, {data: staticData, static: staticData});
+      return `<option value='${i}'${activestat == i ? ' selected' : ''}>${title}</option>`;
+    }).join('\n');
+
+    $("#mygraph_res_title").html(`Graph: <select id='selected_graph'>\n${options}\n</select>`);
+
+    $('#selected_graph').on('change', function() {
+      activestat = parseInt(this.value);
+      localStorage.setItem('activestat', activestat);
+      FetchGraph();
+    });
+  }
+
+  /**
+   * Fetch RRD data as JSON and render the graph.
+   * @returns {void}
+   */
+  function FetchGraph() {
+    $('#preloader').removeClass('hide');
+    if (activestat >= graphconf[activePage].content.length) {
+      activestat = 0;
+      localStorage.setItem('activestat', activestat);
+    }
+
+    var graphList = graphconf[activePage].content[activestat].graph;
+    var options = graphconf[activePage].content[activestat];
+    var dsGraphOptions = options.ds_graph_options || {};
+    var graphOptions = options.graph_options || {};
+
+    // Evaluate string configs
+    for (var dsName in dsGraphOptions) {
+      for (var param in dsGraphOptions[dsName]) {
+        try {
+          dsGraphOptions[dsName][param] = safeEval('(' + dsGraphOptions[dsName][param] + ')');
+        } catch(e) {}
+      }
+    }
+    for (var param in graphOptions) {
+      try {
+        graphOptions[param] = safeEval('(' + graphOptions[param] + ')');
+      } catch(e) {}
+    }
+
+    // Fetch all RRD data as JSON in parallel
+    var promises = graphList.map(function(name) {
+      var url = (staticData == null || staticData[name])
+        ? 'stat/empty.json'
+        : 'stat/' + name + '.json';
+      return $.getJSON(url).then(function(resp) {
+        return { name: name, data: resp };
+      }).fail(function() {
+        return { name: name, data: { series: [] } };
+      });
+    });
+
+    $.when.apply($, promises).done(function() {
+      var results = Array.prototype.slice.call(arguments);
+      RenderChart(results, graphList, dsGraphOptions, graphOptions);
+      SetGraphlist();
+      $('#preloader').addClass('hide');
+      $('#Legend').addClass('hide');
+    });
+  }
+
+  /**
+   * Render the Chart.js graph from fetched data.
+   * @param {Array} results - Array of {name, data} objects.
+   * @param {Array} graphList - List of graph names.
+   * @param {Object} dsGraphOptions - Per-DS graph options.
+   * @param {Object} graphOptions - Global graph options.
+   * @returns {void}
+   */
+  function RenderChart(results, graphList, dsGraphOptions, graphOptions) {
+    var canvas = document.getElementById('mygraph');
+    if (!canvas) return;
+
+    // Destroy previous chart
+    if (chartInstance) {
+      chartInstance.destroy();
+    }
+
+    // Collect all timestamps and build datasets
+    var datasets = [];
+    var allTimestamps = new Set();
+
+    results.forEach(function(result, idx) {
+      var series = result.data.series || [];
+      var dsOpts = dsGraphOptions[result.name] || {};
+
+      series.forEach(function(s) {
+        s.data.forEach(function(point) {
+          allTimestamps.add(point[0]);
+        });
+
+        var label = dsOpts.label || s.name;
+        var color = dsOpts.color || ['#0d6efd', '#dc3545', '#198754', '#ffc107', '#6610f2'][idx % 5];
+
+        var dataPoints = s.data.map(function(point) {
+          return { x: point[0] * 1000, y: point[1] };
+        });
+
+        datasets.push({
+          label: label,
+          data: dataPoints,
+          borderColor: color,
+          backgroundColor: color + '20',
+          borderWidth: dsOpts.lineWidth || 2,
+          fill: dsOpts.fill || false,
+          tension: dsOpts.tension || 0.1,
+          pointRadius: 0,
+          pointHoverRadius: 4
+        });
+      });
+    });
+
+    var chartType = (graphOptions && graphOptions.type) || 'line';
+
+    var ctx = canvas.getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: chartType,
+      data: { datasets: datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          x: {
+            type: 'time',
+            time: { displayFormats: { second: 'HH:mm:ss', minute: 'HH:mm', hour: 'MM/DD HH:mm', day: 'MM/DD' } },
+            title: { display: true, text: 'Time' }
+          },
+          y: {
+            title: { display: true, text: (graphOptions && graphOptions.yLabel) || 'Value' }
+          }
+        },
+        plugins: {
+          legend: { display: true, position: 'bottom' },
+          tooltip: { mode: 'index', intersect: false }
+        }
+      }
+    });
+  }
+
+  /**
+   * Add the RRA selector to the options dialog.
+   * @returns {void}
+   */
+  function AddOption() {
+    var options = rraLabels.map(function(label, i) {
+      return `<option value='${i}'${active_rra == i ? ' selected' : ''}>${label}</option>`;
+    }).join('');
+
+    var html = `<p><b>Statistic</b><br>` +
+      `<form class="form-inline">` +
+      `<span>Default graph timeline <select class="form-select w-auto d-inline-block" id="active_rra">${options}</select></span>` +
+      `</form></p>`;
+    $(html).insertBefore("#optionsInsertionPoint");
+  }
+
+  // Initialize on DOM ready
+  $(function() {
+    // Remove the Javascript warning
+    document.getElementById("infotable").deleteRow(0);
+
+    active_rra = parseInt(localStorage.getItem('active_rra')) || 0;
+
+    $.ajaxSetup({ cache: false });
+
+    ShowFriends();
+    setupqr();
+    doqr(document.URL);
+
+    Start();
+
+    AddOption();
+
+    $('#active_rra').change(function() {
+      localStorage.setItem('active_rra', $('#active_rra').val());
+    });
   });
-}
-
-function FetchGraph() {
-  $('#preloader').removeClass('hide');
-  if ( activestat >= graphconf[activePage].content.length ){
-    activestat = 0;
-    localStorage.setItem('activestat', activestat);
-  }
-  graph = graphconf[activePage].content[activestat].graph;
-  for ( var iloop = 0; iloop < graph.length; iloop++) {
-    if (  ( static==null ) || ( static[graph[iloop]] ) ){
-      try {
-        FetchBinaryURLAsync('stat/empty.rrd', UpdateHandler, iloop);
-      }
-      catch (err) {
-        alert("Failed loading stat/empty.rrd\n" + err);
-      }
-    }
-    else {
-      try {
-        FetchBinaryURLAsync('stat/' + graph[iloop] + '.rrd', UpdateHandler, iloop);
-      }
-      catch (err) {
-        alert("Failed loading stat/" + graph[iloop] + ".rrd\n" + err);
-      }
-    }
-  }
-}
-
-function UpdateHandler(bf, idx) {
-  graph = graphconf[activePage].content[activestat].graph;
-  try {
-    rrd_data[idx] = new RRDFile(bf);
-  } catch (err) {
-    alert("File stat/" + graph[idx] + ".rrd is not a valid RRD archive!");
-  }
-  PrepareGraph(idx);
-  ready = 0;
-  for (var iloop = 0; iloop < graph.length; iloop++) {
-    if (rrd_data[iloop] != undefined) {
-      ready++
-    }
-  }
-  if (ready == graph.length) {
-    UpdateGraph()
-  }
-}
-
-function DoNothing(ds_name) {
-  this.getName = function () {
-    return ds_name;
-  }
-  this.getDSNames = function () {
-    return [ds_name];
-  }
-  this.computeResult = function (val_list) {
-    return val_list[0];
-  }
-}
-
-function Zero(ds_name) { //create a fake DS.
-  this.getName = function () {
-    return ds_name;
-  }
-  this.getDSNames = function () {
-    return [];
-  }
-  this.computeResult = function (val_list) {
-    return 0;
-  }
-}
-
-function SetValue(ds_name,value) { //create a fake DS.
-  this.getName = function () {
-    return ds_name;
-  }
-  this.getDSNames = function () {
-    return [];
-  }
-  this.computeResult = function (val_list) {
-    return value;
-  }
-}
-
-
-function PrepareGraph(idx) {
-  // http://javascriptrrd.sourceforge.net/docs/javascriptrrd_v0.6.0/src/examples/rrdJFlotFilter.html
-  // http://sourceforge.net/p/javascriptrrd/discussion/914914/thread/935d8541/#17d3
-  // Create a RRDFilterOp object that has the all DS's, with the one
-  // existing in the original RRD populated with real values, and the other set to 0.
-  graph = graphconf[activePage].content[activestat].graph;
-  var op_list = []; //list of operations
-  //create a new rrdlist, which contains all original elements (kept the same by DoNothing())
-  for (var iloop = 0; iloop < graph.length; iloop++) {
-    if (iloop != idx) {
-      op_list.push(new Zero(graph[iloop]));
-    }
-    else {
-      // If the graph should represent a static data, construct the line
-      if ( rrd_data[idx].getDS(0).getName() == "empty" ) {
-        op_list.push(new SetValue( graph[iloop], static[graph[iloop]] ) );
-      }
-      else {
-        op_list.push(new DoNothing(rrd_data[idx].getDS(0).getName()));
-      }
-    }
-  }
-  rrd_data[idx] = new RRDFilterOp(rrd_data[idx], op_list);
-}
-
-function UpdateGraph() {
-  graph_options={};
-  active_rra=localStorage.getItem('active_rra') || 0;
-  rrdflot_defaults={ graph_width:"750px",graph_height:"285px", scale_width:"350px", scale_height:"90px", use_rra:true, rra:active_rra };
-  options = graphconf[activePage].content[activestat];
-  ds_graph_options = options.ds_graph_options;
-
-  for(var graph in ds_graph_options) {
-    for(var param in ds_graph_options[graph]) {
-      try {
-        ds_graph_options[graph][param]=safeEval('(' + ds_graph_options[graph][param] + ')');
-      }
-      catch(e) {
-      }
-    }
-  }
- 
-  if ( options.graph_options ) {
-    for(var param in options.graph_options) {
-      try {
-        graph_options[param]=safeEval('(' + options.graph_options[param] + ')');
-      }
-      catch(e) {
-      }
-    }
-  }
-
-  rrd_data_sum = new RRDFileSum( rrd_data );
-  var f = new rrdFlot("mygraph", rrd_data_sum, graph_options, ds_graph_options, rrdflot_defaults );
-  SetGraphlist();
-  $('#preloader').addClass('hide');
-  $('#Legend').addClass('hide');
-}
-
-function AddOption()
-{
-  options =
-          '<p>'+
-          '<b>Statistic</b><br>'+
-          '<form class="form-inline">'+
-            '<span>Default graph timeline <select class="form-select w-auto d-inline-block" id="active_rra">'+
-            '<option value="0" '+ ( active_rra == 0 ? 'selected' : '' ) +'>Graph n°1</option>'+
-            '<option value="1" '+ ( active_rra == 1 ? 'selected' : '' ) +'>Graph n°2</option>'+
-            '<option value="2" '+ ( active_rra == 2 ? 'selected' : '' ) +'>Graph n°3</option>'+
-            '<option value="3" '+ ( active_rra == 3 ? 'selected' : '' ) +'>Graph n°4</option>'+
-            '<option value="4" '+ ( active_rra == 4 ? 'selected' : '' ) +'>Graph n°5</option>'+
-            '</select></span>'+
-          '</form>'+
-        '</p>'; 
-  $(options).insertBefore("#optionsInsertionPoint")
-}
-
-$(function () {
-  // Remove the Javascript warning
-  document.getElementById("infotable").deleteRow(0);
-  
-  active_rra=(localStorage.getItem('active_rra') || 0);
-
-  rrd_data = [];
-
-  $.ajaxSetup({
-    cache : false
-  });
-
-  ShowFriends();
-  /* Add qrcode shortcut*/
-  setupqr();
-  doqr(document.URL);
-
-  Start();
-    
-  /* Populate option dialog*/
-  AddOption();
-  
-  $('#active_rra').change(function(){
-    localStorage.setItem('active_rra',$('#active_rra').val())
-    // TODO: Add text of mygraph_res selected option nearby graph selection
-  });
-
-});
+})();

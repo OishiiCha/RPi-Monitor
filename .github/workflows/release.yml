@@ -17,7 +17,8 @@ jobs:
       - name: Install Perl dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y librrds-perl libipc-sharelite-perl libhttp-daemon-perl libjson-perl
+          sudo apt-get install -y librrds-perl libjson-perl libio-socket-ssl-perl libyaml-libyaml-perl
+          sudo cpanm --notest Mojolicious
 
       - name: Run tests
         run: make test

@@ -14,47 +14,53 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-function ConstructPage()
-{
-  var activePage = GetURLParameter('activePage');
-  if (activePage == null){ activePage = 0; }
 
-  data = getData('addons');
-  if ( ( typeof activePage == 'undefined') ||
-       ( activePage >= data.length ) 
-     )
-  { 
-    activePage = 0
+/**
+ * Addons page module.
+ * @module rpimonitor.addons
+ */
+(function() {
+  'use strict';
+
+  function ConstructPage()
+  {
+    var activePage = GetURLParameter('activePage');
+    if (activePage == null){ activePage = 0; }
+
+    var data = getData('addons');
+    if ( ( typeof activePage == 'undefined') ||
+         ( activePage >= data.length )
+       )
+    {
+      activePage = 0;
+    }
+    if ( data[activePage].showtitle !== 'false' ) {
+      $(`<h2 id="pagetitle"><p class="text-info">${safeEval(data[activePage].title, {data: getData('static')})}</p><hr></h2>`).insertBefore("#insertionPoint");
+    }
+
+    $("#insertionPoint").load(`addons/${data[activePage].addons}/${data[activePage].addons}.html`);
+
+    $("head").append(`<link rel='stylesheet' type='text/css' href='addons/${data[activePage].addons}/${data[activePage].addons}.css' />`);
+
+    jQuery.ajax({
+        url: `addons/${data[activePage].addons}/${data[activePage].addons}.js`,
+        dataType: "script",
+      }).done(function() {
+    });
   }
-  if ( data[activePage].showtitle !== 'false' ) {
-    $('<h2 id="pagetitle"><p class="text-info">'+safeEval(data[activePage].title, {data: getData('static')})+'</p><hr></h2>').insertBefore("#insertionPoint");
-  }
-  
-  $("#insertionPoint").load("addons/"+data[activePage].addons+"/"+data[activePage].addons+".html")
-  
-  $("head").append("<link rel='stylesheet' type='text/css' href='addons/"+data[activePage].addons+"/"+data[activePage].addons+".css' />");
-  
-  jQuery.ajax({
-      url: "addons/"+data[activePage].addons+"/"+data[activePage].addons+".js",
-      dataType: "script",
-    }).done(function() {
+
+  $(function () {
+    /* Set no cache */
+    $.ajaxSetup({ cache: false });
+
+    /* Show friends */
+    ShowFriends();
+
+    /* Add qrcode shortcut*/
+    setupqr();
+    doqr(document.URL);
+
+    /* Get static values once */
+    ConstructPage();
   });
-
-}
-
-$(function () {
-  /* Set no cache */
-  $.ajaxSetup({ cache: false });
-
-  /* Show friends */
-  ShowFriends();
-
-  /* Add qrcode shortcut*/
-  setupqr();
-  doqr(document.URL);
-
-  /* Get static values once */
-  ConstructPage();
-});
-
-
+})();

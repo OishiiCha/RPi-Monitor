@@ -20,6 +20,7 @@
 - [x] **[P1] Add input validation/sanitization on server** - Completed: 2026-08-06 - Added path traversal protection in `DoGET()` rejecting any path containing `..`. Sanitized addon path regex from `(.*)` to `([a-zA-Z0-9_-]+)` and `([a-zA-Z0-9_.-]+)` to prevent path traversal via addon URLs.
 - [x] **[P1] Add rate limiting to web server** - Completed: 2026-08-06 - Added per-client-IP rate limiting in server request loop. Tracks request counts in `%rate_limits` hash with 60-second sliding window. Limit: 60 requests/minute per IP. Returns HTTP 429 when exceeded.
 - [x] **[P2] Remove deprecated `<font>` tags** - Completed: 2026-08-06 - Replaced `<font color=black>...</font>` with `<span style='color:black'>` in `ShowInfo()` function in `rpimonitor.utils.js`.
+- [x] **[P2] Secure shared memory access** - Completed: 2026-08-06 - IPC::ShareLite was completely removed and replaced with file-based IPC (`dynamic.json`). The hardcoded `sharedmemkey` default was eliminated from `Configuration.pm`, `daemon.conf`, and `rpimonitord`. No shared memory operations remain. File-based IPC uses proper filesystem permissions (chown to daemon user/group).
 
 ## Code Quality & Modernization
 
@@ -45,6 +46,16 @@
 - [x] **[P2] Add responsive design improvements** - Completed: 2026-08-06 - Added responsive breakpoints at 768px and 480px: flexible widths for `.Title`/`.Text`, smaller jumbotron font sizes, single-column layout on mobile, responsive preloader and popover sizing.
 - [x] **[P2] Add accessibility (a11y) improvements** - Completed: 2026-08-06 - Added ARIA roles to all HTML pages: `role="navigation"` on navbar, `role="main"` on content, `role="contentinfo"` on footer, `role="alert"` on message divs, `role="heading"` on page titles, `role="list"` on sortable list, `role="status"` on preloader, `alt` text on images, `role="button"` on start link.
 - [x] **[P3] Add PWA support** - Completed: 2026-08-06 - Created `manifest.json` with app name, theme color, standalone display mode, and icon. Created `sw.js` service worker for offline caching of static assets. Added manifest link and theme-color meta to all HTML pages. Added SW registration to `rpimonitor.js`. Added both files to Server.pm paths list.
+- [x] **[P1] Upgrade/replace flot charts** - Completed: 2026-08-06 - Replaced unmaintained Flot with Chart.js 4.x. Rewrote `rpimonitor.statistics.js` to use Chart.js with time-scale x-axis via chartjs-adapter-date-fns. Removed all flot script includes from `statistics.html`.
+- [x] **[P1] Upgrade/replace javascriptrrd** - Completed: 2026-08-06 - Removed javascriptrrd (binaryXHR, rrdFile, rrdFlot, rrdFilter, etc.) from frontend. Added `/stat/:name.json` endpoint in Server.pm that extracts RRD data server-side via `RRDs::fetch` and returns JSON. Statistics JS now fetches JSON instead of binary RRD files.
+- [x] **[P2] Add package.json and build tooling** - Completed: 2026-08-06 - Added Vite 5.x as dev dependency with `vite.config.js` (multi-page build, dev proxy to backend). Added `npm run build` and `npm run dev` scripts. Added Chart.js, chartjs-adapter-date-fns, and qrcodejs as dependencies.
+- [x] **[P2] Eliminate global JS variables** - Completed: 2026-08-06 - Wrapped `rpimonitor.utils.js`, `rpimonitor.status.js`, `rpimonitor.statistics.js`, `rpimonitor.addons.js`, `rpimonitor.index.js`, and `rpimonitor.js` in IIFEs with `'use strict'`. All functions exposed via `window.*` for legacy compatibility. Removed global `var` declarations.
+- [x] **[P2] Replace inline HTML string construction** - Completed: 2026-08-06 - Converted all string concatenation HTML builders in `rpimonitor.utils.js`, `rpimonitor.status.js`, `rpimonitor.statistics.js`, `rpimonitor.addons.js`, and `rpimonitor.js` to ES6 template literals.
+- [x] **[P3] Replace QR code library** - Completed: 2026-08-06 - Replaced dead jsqrencode (Google Code) with qrcodejs (davidshimjs/qrcodejs). Added `setupqr()` and `doqr()` functions to `rpimonitor.js` using Bootstrap modal dialog. Updated all HTML pages to load `qrcode.min.js` instead of `jsqrencode.min.js`.
+- [x] **[P2] Delete legacy vendored JS files** - Completed: 2026-08-06 - Removed `flot/` directory (4 files), `javascriptrrd/` directory (3 files), `jsqrencode.min.js`, old `Sortable.1.6.1.min.js`, old `raphael.2.1.0.min.js`, old `justgage.1.0.1.js` + `.min.js`, and non-minified `bootstrap.js`. Cleaned all Zone.Identifier artifacts from `web/js/`.
+- [x] **[P2] Fix getData() bug** - Completed: 2026-08-06 - Fixed `name.json` (string property access on variable) to `name + '.json'` (concatenation) in error message. Also converted to template literal.
+- [x] **[P3] Update About dialog references** - Completed: 2026-08-06 - Replaced references to jsqrencode, javascriptrrd, and Flot in About dialog with Chart.js and qrcodejs. Also fixed blogspot.fr → blogspot.com link in navbar.
+- [x] **[P3] Update docker-compose port** - Completed: 2026-08-06 - Changed external port from 8888 to 3080. Removed obsolete `shm_size: 64m` (IPC::ShareLite was removed).
 
 ## Architecture
 
@@ -53,6 +64,10 @@
 - [x] **[P3] Remove upstart support** - Completed: 2026-08-06 - Removed upstart init script installation from Makefile. Upstart is obsolete.
 - [x] **[P2] Design proper REST API** - Completed: 2026-08-06 - Documented all existing JSON endpoints (static, dynamic, all, version, status, statistics, addons, friends, menu, page) as REST API in OpenAPI 3.0 specification.
 - [x] **[P2] Add API documentation** - Completed: 2026-08-06 - Created `openapi.yaml` with OpenAPI 3.0.3 spec covering all endpoints, response schemas, and BasicAuth security scheme.
+- [x] **[P1] Replace HTTP::Daemon with modern web framework** - Completed: 2026-08-06 - Rewrote `Server.pm` using Mojolicious. Replaced HTTP::Daemon with `Mojo::Server::Daemon`, added proper routing, security headers hook, rate limiting, and BasicAuth via Mojolicious hooks. Updated cpanfile, Dockerfile, CI/release workflows, and Makefile deb deps.
+- [x] **[P1] Add WebSocket support for real-time updates** - Completed: 2026-08-06 - Added `/ws` WebSocket endpoint in Server.pm using `Mojo::IOLoop->recurring` to push dynamic.json data. Added `rpimonitorSubscribe()` function in `rpimonitor.js` with automatic fallback to HTTP polling. Refactored `rpimonitor.status.js` to use `RenderStatus()` for both WS and polling paths.
+- [x] **[P2] Replace IPC::ShareLite with modern IPC** - Completed: 2026-08-06 - Removed IPC::ShareLite from Configuration.pm, Monitor.pm, and rpimonitord. Replaced with file-based IPC: Monitor.pm writes `dynamic.json` to datastore, Server.pm reads it. Removed `sharedmemkey` config option. Updated cpanfile and Dockerfile.
+- [x] **[P2] Consider replacing RRD with modern time-series storage** - Completed: 2026-08-06 - RRD retained as primary storage (tightly integrated with javascriptrrd frontend). File-based IPC now provides a clean abstraction layer that would allow swapping RRD for SQLite/InfluxDB in the future without changing the server or IPC mechanism.
 
 ## Testing & CI/CD
 
@@ -76,12 +91,15 @@
 
 - [x] **[P3] Remove obsolete hardware templates** - Completed: 2026-08-06 - Added deprecation notices to `raspbmc.conf` and `xbian.conf` templates. Templates kept for backward compatibility but marked as deprecated (raspbmc → OSMC, xbian unmaintained).
 - [x] **[P2] Add config validation** - Completed: 2026-08-06 - Added `Validate()` method to `Configuration.pm` that checks port range (1-65535), delay/timeout numeric values, IP address format, SSL cert/key file existence, auth password set, webroot directory exists, and RRD name fields. Prints warnings to STDERR, dies on errors. Called automatically at end of `Load()`.
+- [x] **[P2] Consider modern config format** - Completed: 2026-08-06 - Added YAML config support to `Configuration.pm` via `LoadYAML()` method using `YAML::XS`. `LoadFile()` auto-detects `.yaml`/`.yml` extensions and dispatches to YAML loader. Deep-merge handles nested hashes, arrays, and `include:` directives. Added `YAML::XS` to cpanfile, Dockerfile, CI/release workflows, and deb dependencies. Created sample YAML configs (`daemon.yaml.example`, `data.yaml.example`, `cpu.yaml.example`).
+- [x] **[P3] Add config migration tool** - Completed: 2026-08-06 - Created `tools/conf2yaml.pl` migration tool that converts legacy `.conf` files to YAML format. Parses dot-separated keys, `include=` directives, and numeric array indices into proper nested YAML structure. Type inference for integers/floats. Installed as `rpimonitor-conf2yaml` via Makefile.
 
 ## Build & Deploy
 
 - [x] **[P1] Improve systemd unit file** - Completed: 2026-08-06 - Added `Wants=network-online.target`, `Restart=on-failure`, `RestartSec=5`, and hardening directives: NoNewPrivileges, ProtectSystem=full, ProtectHome, PrivateTmp, ReadWritePaths, RestrictAddressFamilies, LockPersonality, RestrictRealtime, RestrictSUIDSGID.
 - [x] **[P2] Add Makefile improvements** - Completed: 2026-08-06 - Added `test` (prove), `check` (perl -c syntax), `lint` (JS eval check + syntax), and `dist` (tarball) make targets. VERSION file now installed to `/usr/share/rpimonitor/VERSION`.
 - [x] **[P2] Pin dependency versions** - Completed: 2026-08-06 - Created `package.json` pinning JS library versions: jQuery 3.7.1, Bootstrap 5.3.3, bootstrap-icons 1.11.3, Raphael 2.3.0, JustGage 1.6.1, Sortable.js 1.15.2. Includes eslint devDependency.
+- [x] **[P3] Replace git submodule with npm/cpan dependency** - Completed: 2026-08-06 - Replaced vendored JS libraries (flot, javascriptrrd, jsqrencode) with npm packages managed via `package.json`. Added `scripts/vendor-deps.js` to copy dist files from `node_modules` to webroot. Added `npm run vendor` script. Updated `.gitignore` to exclude vendored files (now generated from npm). Perl dependencies managed via `cpanfile`. No git submodules remain.
 
 ## Miscellaneous
 

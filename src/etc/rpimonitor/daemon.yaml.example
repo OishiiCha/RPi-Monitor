@@ -1,0 +1,46 @@
+# Daemon configuration (YAML format)
+# This is the YAML equivalent of daemon.conf
+# To use: replace /etc/rpimonitor/daemon.conf with this file
+# and update data.conf (or data.yaml) to reference it.
+
+daemon:
+  # delay: 10              # Refresh interval in seconds
+  # defaultinterval: 1     # Default data collection interval
+  # timeout: 10            # Command timeout in seconds
+  # noserver: 0            # Set to 1 to disable web server
+  # readonly: 0            # Set to 1 for read-only mode
+  # addr: 0.0.0.0          # Bind address
+  # port: 8888             # Web server port
+  # user: pi               # Drop privileges to this user
+  # group: pi              # Drop privileges to this group
+  # webroot: /usr/share/rpimonitor/web
+  # datastore: /var/lib/rpimonitor
+  # logfile: /var/log/rpimonitor.log
+  # loglevel: 0            # 0=quiet, 1=info, 2=debug, 3=trace
+
+  # Authentication (HTTP Basic Auth)
+  # auth: 0
+  # authuser: admin
+  # authpass: ""
+  # authrealm: RPi-Monitor
+
+  # SSL/TLS configuration
+  # ssl: 0
+  # sslcert: /etc/rpimonitor/cert.pem
+  # sslkey: /etc/rpimonitor/key.pem
+
+  # Testing mode (auto-detected; force with testmode: 1)
+  # testmode: 0
+
+# SNMP agent configuration
+snmpagent:
+  # rootoid: .1.3.6.1.4.1
+  # enterpriseoid: 54321
+  # rpimonitoroid: 42
+  # mibname: RPIMONITOR-MIB
+  # lastupdate: 201802030000Z
+  # moduleidentity: rpi-experiences
+  # organisation: RPi-Monitor
+  # contactionfo: http://rpi-experiences.blogspot.com/
+  # description: description
+  # revision: 201802030000Z

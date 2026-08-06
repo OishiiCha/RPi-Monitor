@@ -21,3 +21,12 @@ Thumbs.db
 
 # Docker
 config/template/
+
+# Node.js
+node_modules/
+dist/web/
+
+# Vendored JS libraries (now managed by npm + vendor script)
+src/usr/share/rpimonitor/web/js/chart.umd.min.js
+src/usr/share/rpimonitor/web/js/chartjs-adapter-date-fns.bundle.kurkle.min.js
+src/usr/share/rpimonitor/web/js/qrcode.min.js

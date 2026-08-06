@@ -5,7 +5,7 @@ use POSIX;
 use Cwd 'abs_path';
 use Data::Dumper;
 use RRDs;
-use IPC::ShareLite;
+use YAML::XS;
 
 our $VERSION = "{DEVELOPMENT}";
 
@@ -79,7 +79,6 @@ sub Load
   $this->{'daemon'}->{'defaultinterval'} ||= 1;
   $this->{'daemon'}->{'readonly'}        ||= 0;
   $this->{'daemon'}->{'timeout'}         ||= 5;
-  $this->{'daemon'}->{'sharedmemkey'}    ||= 20130906;
   $this->{'daemon'}->{'loglevel'}        ||= 0;
   $this->{'daemon'}->{'auth'}            ||= 0;
   $this->{'daemon'}->{'authuser'}        ||= "admin";
@@ -165,11 +164,10 @@ sub Load
     die "loglevel = $main::loglevel\n";
   }
 
-  $this->{'sharedmem'} = IPC::ShareLite->new(
-        -key     => $this->{'daemon'}->{'sharedmemkey'},
-        -create  => 'yes',
-        -destroy => 'no'
-    ) or die $!;
+  # File-based IPC: ensure datastore directory exists for dynamic.json
+  if ( ! -d "$this->{'daemon'}->{'datastore'}" ) {
+    mkdir "$this->{'daemon'}->{'datastore'}";
+  }
 }
 
 sub Validate
@@ -237,8 +235,15 @@ sub LoadFile
 {
   my $this = shift;
   my $confFile = shift;
-  my @dict;
   $this->Debug(3,"Loading file: $confFile");
+
+  # Dispatch to YAML loader for .yaml/.yml files
+  if ( $confFile =~ /\.ya?ml$/i ) {
+    $this->LoadYAML($confFile);
+    return;
+  }
+
+  my @dict;
 
   open (FILE, $confFile)
     or die "Error while openning configuration file \"$confFile\" because $!\n";
@@ -312,6 +317,81 @@ sub LoadFile
     }
     else {
       $tree->{$current} = $value;
+    }
+  }
+}
+
+sub LoadYAML
+{
+  my $this = shift;
+  my $confFile = shift;
+  $this->Debug(3,"Loading YAML file: $confFile");
+
+  open my $fh, '<', $confFile
+    or die "Error while opening YAML configuration file \"$confFile\": $!\n";
+  local $/;
+  my $yaml_text = <$fh>;
+  close $fh;
+
+  my $data = YAML::XS::Load($yaml_text);
+  if ( !defined $data ) {
+    $this->Debug(1, "YAML file $confFile parsed empty");
+    return;
+  }
+
+  # Process includes (array of include paths under 'include' key)
+  if ( ref($data) eq 'HASH' && exists $data->{'include'} ) {
+    my $includes = $data->{'include'};
+    $includes = [$includes] unless ref($includes) eq 'ARRAY';
+    for my $inc ( @$includes ) {
+      if ( -f $inc ) {
+        push(@{$this->{'daemon'}->{'confFiles'}}, $inc);
+      }
+      else {
+        $this->Debug(1, "YAML include file not found: $inc");
+      }
+    }
+    delete $data->{'include'};
+  }
+
+  # Deep-merge YAML data into $this
+  $this->_deep_merge($this, $data);
+
+  # Collect RRD definitions from YAML structure
+  if ( ref($data) eq 'HASH' && exists $data->{'rrd'} ) {
+    my $rrds = $data->{'rrd'};
+    $rrds = [$rrds] unless ref($rrds) eq 'ARRAY';
+    for my $r ( @$rrds ) {
+      push(@{$this->{'rrd'}}, $r) if ref($r) eq 'HASH';
+    }
+  }
+}
+
+sub _deep_merge
+{
+  my $this = shift;
+  my $target = shift;
+  my $source = shift;
+
+  if ( ref($source) eq 'HASH' ) {
+    for my $key ( keys %$source ) {
+      if ( exists $target->{$key} && ref($target->{$key}) eq 'HASH' && ref($source->{$key}) eq 'HASH' ) {
+        $this->_deep_merge($target->{$key}, $source->{$key});
+      }
+      elsif ( exists $target->{$key} && ref($target->{$key}) eq 'ARRAY' && ref($source->{$key}) eq 'ARRAY' ) {
+        push(@{$target->{$key}}, @{$source->{$key}});
+      }
+      else {
+        $target->{$key} = $source->{$key};
+      }
+    }
+  }
+  elsif ( ref($source) eq 'ARRAY' ) {
+    if ( ref($target) eq 'ARRAY' ) {
+      push(@$target, @$source);
+    }
+    else {
+      $target = $source;
     }
   }
 }
